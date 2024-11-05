@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.views import View
 from ProInDev.accounts.forms import UserRegistrationForm, UserProfileForm
@@ -23,17 +24,19 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self, request):
-        return render(request, 'sign-in.html')
+        form = AuthenticationForm()
+        return render(request, 'sign-in.html', {'form': form})
 
     def post(self, request):
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
-            return redirect('index')
-        else:
-            return render(request, 'sign-in.html', {'error': 'Invalid credentials'})
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+        return render(request, 'sign-in.html', {'form': form})
 
 @login_required
 def profile_view(request):
