@@ -1,8 +1,9 @@
+# content/views.py
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DetailView, DeleteView
-
-from ProInDev.content.forms import ContentForm
-from ProInDev.content.models import Content
+from django.views.generic import ListView, CreateView, DetailView
+from ProInDev.content.models import Content, Post, Comment
+from ProInDev.content.forms import ContentForm, CommentForm
 
 
 class ContentListView(ListView):
@@ -25,20 +26,24 @@ class ContentCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ContentDetailView(DetailView):
-    model = Content
+class PostDetailView(DetailView):
+    model = Post
     template_name = 'post-details.html'
-    context_object_name = 'content'
+    context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 
-class ContentUpdateView(UpdateView):
-    model = Content
-    form_class = ContentForm
-    template_name = 'create-page.html'
-    success_url = reverse_lazy('content-list')
-
-
-class ContentDeleteView(DeleteView):
-    model = Content
-    template_name = 'content_confirm_delete.html'
-    success_url = reverse_lazy('content-list')
+def post_comment(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('post-detail', pk=post.pk)
+    return redirect('post-detail', pk=post.pk)
