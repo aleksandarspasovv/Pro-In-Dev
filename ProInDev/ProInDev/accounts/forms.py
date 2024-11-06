@@ -1,6 +1,6 @@
+# accounts/forms.py
 from django import forms
 from django.contrib.auth.models import User
-
 from ProInDev.accounts.models import UserProfile
 
 
@@ -18,6 +18,7 @@ class UserRegistrationForm(forms.ModelForm):
         if password != password_confirm:
             raise forms.ValidationError("Passwords do not match.")
         return password_confirm
+
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

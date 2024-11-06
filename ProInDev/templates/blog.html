@@ -1,15 +1,49 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Blog - Social Media Network{% endblock %}
+
 {% block content %}
-<h1>Blog Posts</h1>
+<div class="container">
+    <h1 class="text-center mb-5">Latest Blog Posts</h1>
 
-{% for post in contents %}
-    <div class="post">
-        <h2><a href="{% url 'post-detail' post.pk %}">{{ post.title }}</a></h2>
-        <p>{{ post.body|truncatewords:50 }}</p>
-        <small>Published: {{ post.created_at }}</small>
+    {% if not user.is_authenticated %}
+        <p class="alert alert-info text-center">Log in to see more posts and engage with the community!</p>
+    {% endif %}
+
+    <!-- Blog Items Start -->
+    <div class="row g-4">
+        {% for post in contents %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <img src="{% static 'assets/images/post/4by3/03.jpg' %}" class="card-img-top" alt="Post image">
+                <div class="card-body">
+                    <a href="#" class="badge bg-primary mb-2">Category</a>
+                    <h5 class="card-title"><a href="{% url 'post-detail' post.pk %}" class="text-dark">{{ post.title }}</a></h5>
+                    <p class="card-text">{{ post.body|truncatewords:20 }}</p>
+                    <small class="text-muted">Published: {{ post.created_at }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-{% endfor %}
+    <!-- Blog Items End -->
 
+    <!-- Pagination -->
+    <div class="mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
 {% endblock %}
