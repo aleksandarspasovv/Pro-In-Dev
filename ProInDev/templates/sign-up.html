@@ -12,30 +12,37 @@
                     <h1 class="mb-2">Sign up</h1>
                     <span class="d-block">Already have an account? <a href="{% url 'login' %}">Sign in here</a></span>
                 </div>
-                
+
                 <!-- Form START -->
                 <form method="post" class="mt-4" action="{% url 'register' %}">
                     {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+                    
                     <div class="mb-3 input-group-lg">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    
+                    <div class="mb-3 input-group-lg">
+                        {{ form.email.label_tag }}
                         {{ form.email }}
                         <small>We'll never share your email with anyone else.</small>
                     </div>
-                    <div class="mb-3 position-relative">
-                        <div class="input-group input-group-lg">
-                            {{ form.password }}
-                            <span class="input-group-text p-0">
-                                <i class="fa-solid fa-eye-slash cursor-pointer p-2 w-40px"></i>
-                            </span>
-                        </div>
-                    </div>
+                    
                     <div class="mb-3 input-group-lg">
-                        {{ form.password_confirm }}
+                        {{ form.password1.label_tag }}
+                        {{ form.password1 }}
                     </div>
-                    <div class="mb-3 text-start">
-                        <input type="checkbox" class="form-check-input" id="keepsingnedCheck">
-                        <label class="form-check-label" for="keepsingnedCheck"> Keep me signed in</label>
+                    
+                    <div class="mb-3 input-group-lg">
+                        {{ form.password2.label_tag }}
+                        {{ form.password2 }}
                     </div>
-                    <div class="d-grid"><button type="submit" class="btn btn-lg btn-primary">Sign me up</button></div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-lg btn-primary">Sign me up</button>
+                    </div>
                 </form>
                 <!-- Form END -->
             </div>

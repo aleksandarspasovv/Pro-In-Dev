@@ -1,23 +1,24 @@
 # accounts/forms.py
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from ProInDev.accounts.models import UserProfile
 
 
-class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password_confirm = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+class UserRegistrationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'email', 'password1', 'password2']  # Use password1 and password2
 
-    def clean_password_confirm(self):
-        password = self.cleaned_data.get('password')
-        password_confirm = self.cleaned_data.get('password_confirm')
-        if password != password_confirm:
-            raise forms.ValidationError("Passwords do not match.")
-        return password_confirm
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+            UserProfile.objects.create(user=user)  # Automatically create UserProfile
+        return user
 
 
 class UserProfileForm(forms.ModelForm):
