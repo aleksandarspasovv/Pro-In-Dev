@@ -64,6 +64,8 @@ def profile_edit(request):
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
+            messages.success(request, "Profile updated successfully.")
             return redirect('profile')
 
-    return render(request, 'edit-profile.html', {'form': form})
+    # Render 'settings.html' as intended
+    return render(request, 'settings.html', {'form': form})
