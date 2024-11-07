@@ -1,156 +1,153 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Social - Network, Community and Event Theme</title>
 
-    <!-- Meta Tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Webestica.com">
-    <meta name="description" content="Bootstrap 5 based Social Media Network and Community Theme">
-
-    <!-- Dark mode -->
-    <script>
-        const storedTheme = localStorage.getItem('theme');
-        const getPreferredTheme = () => {
-            return storedTheme ? storedTheme : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        };
-        const setTheme = (theme) => {
-            document.documentElement.setAttribute('data-bs-theme', theme);
-        };
-        setTheme(getPreferredTheme());
-        window.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const theme = toggle.getAttribute('data-bs-theme-value');
-                    localStorage.setItem('theme', theme);
-                    setTheme(theme);
-                });
-            });
-        });
-    </script>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
-
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
-    <!-- Plugins CSS -->
-    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/dropzone/dist/dropzone.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/flatpickr/dist/flatpickr.css' %}">
-
-    <!-- Theme CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-
-<body>
-
-<!-- =======================
-Header START -->
-<header class="navbar-light fixed-top header-static bg-mode">
-    <!-- Logo Nav START -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">
-                <img class="light-mode-item navbar-brand-item" src="{% static 'images/logo.svg' %}" alt="logo">
-                <img class="dark-mode-item navbar-brand-item" src="{% static 'images/logo.svg' %}" alt="logo">
-            </a>
-            <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-animation">
-                    <span></span><span></span><span></span>
-                </span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
-                    <form class="rounded position-relative">
-                        <input class="form-control ps-5 bg-light" type="search" placeholder="Search..." aria-label="Search">
-                        <button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="submit"><i class="bi bi-search fs-5"> </i></button>
-                    </form>
-                </div>
-                <ul class="navbar-nav navbar-nav-scroll ms-auto">
-                    <!-- Add other navbar items here as needed -->
-                </ul>
-            </div>
+{% block content %}
+<div class="container my-5">
+  <div class="row">
+    <!-- Sidenav START -->
+    <div class="col-lg-3">
+      <div class="card w-100">
+        <div class="card-body">
+          <!-- Side Nav START -->
+          <ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#account-settings" data-bs-toggle="tab">
+                <img class="me-2 h-20px fa-fw" src="{% static 'assets/images/icon/person-outline-filled.svg' %}" alt="">
+                <span>Account</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#nav-remove-account" data-bs-toggle="tab">
+                <img class="me-2 h-20px fa-fw" src="{% static 'assets/images/icon/trash-outline-filled.svg' %}" alt="">
+                <span>Remove Account</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#nav-setting-tab-3" data-bs-toggle="tab">
+                <img class="me-2 h-20px fa-fw" src="{% static 'assets/images/icon/privacy-outlined-filled.svg' %}" alt="">
+                <span>Privacy and Safety</span>
+              </a>
+            </li>
+            <!-- Add other navigation items as needed -->
+          </ul>
+          <!-- Side Nav END -->
         </div>
-    </nav>
-</header>
-<!-- =======================
-Header END -->
-
-<!-- **************** MAIN CONTENT START **************** -->
-<main>
-    <div class="container">
-        <div class="row">
-            <!-- Sidenav START -->
-            <div class="col-lg-3">
-                <nav class="navbar navbar-light navbar-expand-lg mx-0">
-                    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
-                        <div class="offcanvas-header">
-                            <button type="button" class="btn-close text-reset ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body p-0">
-                            <!-- Card START -->
-                            <div class="card w-100">
-                                <div class="card-body">
-                                    <!-- Side Nav START -->
-                                    <ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0">
-                                        <li class="nav-item" data-bs-dismiss="offcanvas">
-                                            <a class="nav-link d-flex mb-0 active" href="#nav-setting-tab-1" data-bs-toggle="tab"> 
-                                                <img class="me-2 h-20px fa-fw" src="{% static 'images/icon/person-outline-filled.svg' %}" alt=""><span>Account </span>
-                                            </a>
-                                        </li>
-                                        <!-- Add other nav items here as needed -->
-                                    </ul>
-                                    <!-- Side Nav END -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-            <!-- Sidenav END -->
-
-            <!-- Main content START -->
-            <div class="col-lg-6 vstack gap-4">
-                <div class="tab-content py-0 mb-0">
-                    <div class="tab-pane show active fade" id="nav-setting-tab-1">
-                        <div class="card mb-4">
-                            <div class="card-header border-0 pb-0">
-                                <h1 class="h5 card-title">Account Settings</h1>
-                            </div>
-                            <div class="card-body">
-                                <form class="row g-3">
-                                    <div class="col-sm-6 col-lg-4">
-                                        <label class="form-label">First name</label>
-                                        <input type="text" class="form-control" value="Sam">
-                                    </div>
-                                    <!-- Add other form elements here as needed -->
-                                    <div class="col-12 text-end">
-                                        <button type="submit" class="btn btn-sm btn-primary mb-0">Save changes</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add other tab panes here as needed -->
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-</main>
-<!-- **************** MAIN CONTENT END **************** -->
+    <!-- Sidenav END -->
 
-<!-- Bootstrap JS -->
-<script src="{% static 'vendor/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'vendor/choices.js/public/assets/scripts/choices.min.js' %}"></script>
-<script src="{% static 'vendor/dropzone/dist/dropzone.js' %}"></script>
-<script src="{% static 'vendor/flatpickr/dist/flatpickr.min.js' %}"></script>
-<script src="{% static 'js/functions.js' %}"></script>
-</body>
-</html>
+    <!-- Main content START -->
+    <div class="col-lg-9 vstack gap-4">
+      <div class="tab-content" id="settingsTabContent">
+        
+        <!-- Account Settings Tab -->
+        <div class="tab-pane fade show active" id="account-settings">
+          <!-- Account Information Form -->
+          <div class="card mb-4">
+            <div class="card-header border-0 pb-0">
+              <h1 class="h5 card-title">Account Settings</h1>
+              <p class="mb-0">Manage your account details.</p>
+            </div>
+            <div class="card-body">
+              <!-- Account Information Form START -->
+              <form class="row g-3">
+                <!-- Basic Account Information Fields -->
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">First name</label>
+                  <input type="text" class="form-control" value="Sam">
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Last name</label>
+                  <input type="text" class="form-control" value="Lanson">
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Additional name</label>
+                  <input type="text" class="form-control" placeholder="">
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control" value="@samlanson">
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" value="sam@webestica.com">
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Phone number</label>
+                  <input type="text" class="form-control" value="(678) 324-1251">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Overview</label>
+                  <textarea class="form-control" rows="3" placeholder="Character limit: 300">Interested has all Devonshire difficulty gay assistance joy...</textarea>
+                </div>
+                <!-- Save Changes Button for Account Info -->
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-primary mb-0">Save changes</button>
+                </div>
+              </form>
+              <!-- Account Information Form END -->
+            </div>
+          </div>
+
+          <!-- Change Password Form -->
+          <div class="card">
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title">Change your password</h5>
+              <p class="mb-0">Update your password for increased security.</p>
+            </div>
+            <div class="card-body">
+              <!-- Change Password Form START -->
+              <form class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Current password</label>
+                  <input type="password" class="form-control" placeholder="Enter current password">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">New password</label>
+                  <div class="input-group">
+                    <input class="form-control" type="password" placeholder="Enter new password">
+                    <span class="input-group-text p-0">
+                      <i class="fa-solid fa-eye-slash cursor-pointer p-2"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Confirm password</label>
+                  <input type="password" class="form-control" placeholder="Confirm new password">
+                </div>
+                <!-- Update Password Button -->
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-primary mb-0">Update password</button>
+                </div>
+              </form>
+              <!-- Change Password Form END -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Remove Account Tab -->
+        <div class="tab-pane fade" id="nav-remove-account">
+          <div class="card">
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title text-danger">Remove Account</h5>
+              <p class="mb-0">Permanently delete your account and all associated data.</p>
+            </div>
+            <div class="card-body">
+              <form class="row g-3">
+                <div class="col-12">
+                  <label class="form-label">Please type your password to confirm</label>
+                  <input type="password" class="form-control" placeholder="Enter your password">
+                </div>
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-danger mb-0">Delete Account</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Main content END -->
+  </div>
+</div>
+{% endblock %}

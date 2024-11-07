@@ -8,6 +8,7 @@ from ProInDev.content.forms import ContentForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+
 class ContentListView(ListView):
     model = Content
     template_name = 'blog.html'
@@ -21,16 +22,18 @@ class ContentListView(ListView):
             return Content.objects.filter(author=admin_user).order_by('-created_at')
         return Content.objects.none()
 
+
 @method_decorator(login_required, name='dispatch')
 class ContentCreateView(CreateView):
     model = Content
     form_class = ContentForm
-    template_name = 'create-page.html'
+    template_name = 'create-post.html'
     success_url = reverse_lazy('content-list')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
 
 class PostDetailView(DetailView):
     model = Post
@@ -42,6 +45,7 @@ class PostDetailView(DetailView):
         context['comment_form'] = CommentForm()
         return context
 
+
 def post_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -52,3 +56,10 @@ def post_comment(request, pk):
             comment.save()
             return redirect('post-detail', pk=post.pk)
     return redirect('post-detail', pk=post.pk)
+
+
+class ContentCreateView(CreateView):
+    model = Post
+    fields = ['title', 'content', 'author', 'image']  # Removed 'visibility'
+    template_name = 'create-post.html'
+    success_url = reverse_lazy('post_list')

@@ -2,14 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}Social - Network, Community, and Event Theme{% endblock %}</title>
+    <title>{% block title %}ProInDev - Social Media Platform{% endblock %}</title>
     
     <!-- Meta Tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Webestica.com">
-    <meta name="description" content="Bootstrap 5 based Social Media Network and Community Theme">
-    
+    <meta name="description" content="ProInDev - A Social Media Platform">
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/oie_006YexpOcd9v.ico' %}">
 
@@ -18,19 +17,19 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     
     <!-- Plugins CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/OverlayScrollbars-master/css/OverlayScrollbars.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/tiny-slider/dist/tiny-slider.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/choices.js/public/assets/styles/choices.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/glightbox-master/dist/css/glightbox.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/dropzone/dist/dropzone.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/flatpickr/dist/flatpickr.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/plyr/plyr.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/vendor/zuck.js/dist/zuck.min.css' %}">
-    
+    <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/OverlayScrollbars-master/css/OverlayScrollbars.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/tiny-slider/dist/tiny-slider.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/choices.js/public/assets/styles/choices.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/glightbox-master/dist/css/glightbox.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/dropzone/dist/dropzone.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/flatpickr/dist/flatpickr.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/plyr/plyr.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendor/zuck.js/dist/zuck.min.css' %}">
+
     <!-- Theme CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <!-- Custom CSS for logo size -->
     <style>
@@ -39,74 +38,76 @@
             height: auto;
         }
     </style>
+
+    {% block extra_css %}{% endblock %}
 </head>
+
 <body>
+    <!-- Header START -->
+    <header class="navbar-light fixed-top header-static bg-mode">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img class="light-mode-item navbar-brand-item" src="{% static 'assets/images/custom_logo.svg' %}" alt="ProInDev Logo">
+                    <img class="dark-mode-item navbar-brand-item" src="{% static 'assets/images/custom_logo.svg' %}" alt="ProInDev Logo">
+                </a>
 
-<!-- Header START -->
-<header class="navbar-light fixed-top header-static bg-mode">
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand" href="{% url 'index' %}">
-                <img class="light-mode-item navbar-brand-item" src="{% static 'assets/images/custom_logo.svg' %}" alt="custom_logo">
-                <img class="dark-mode-item navbar-brand-item" src="{% static 'assets/images/custom_logo.svg' %}" alt="custom_logo">
-            </a>
+                <!-- Navbar toggler -->
+                <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-animation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
 
-            <!-- Navbar toggler -->
-            <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                <span class="navbar-toggler-animation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-            </button>
-
-            <!-- Navbar links -->
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'content-list' %}">Content</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
-                        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                            {% if user.is_authenticated %}
-                                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                            {% else %}
-                                <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-                                <li><a class="dropdown-item" href="{% url 'register' %}">Sign Up</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                </ul>
+                <!-- Navbar links -->
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'content-list' %}">Content</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                {% if user.is_authenticated %}
+                                    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'register' %}">Sign Up</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
+        </nav>
+    </header>
+    <!-- Header END -->
+
+    <!-- Main Content START -->
+    <main>
+        <div class="container my-5">
+            {% block content %}{% endblock %}
         </div>
-    </nav>
-</header>
-<!-- Header END -->
+    </main>
+    <!-- Main Content END -->
 
-<main>
-    <!-- Main content -->
-    <div class="container my-5">
-        {% block content %}
-        <!-- Page-specific content will be injected here -->
-        {% endblock %}
-    </div>
-</main>
+    <!-- Footer START -->
+    <footer class="text-center py-5">
+        <p class="mb-0">©2024 <a href="https://www.webestica.com/" target="_blank">Webestica</a></p>
+    </footer>
+    <!-- Footer END -->
 
-<!-- Footer -->
-<footer class="text-center py-5">
-    <p class="mb-0">©2024 <a href="https://www.webestica.com/" target="_blank">Webestica</a></p>
-</footer>
-
-<!-- Scripts -->
-<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
-<!-- Other necessary scripts as per the theme's requirements -->
-
+    <!-- Scripts -->
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/functions.js' %}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
