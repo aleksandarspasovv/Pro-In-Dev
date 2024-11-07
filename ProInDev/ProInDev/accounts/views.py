@@ -54,3 +54,16 @@ def profile_view(request):
             return redirect('profile')
         messages.error(request, "There was an error updating your profile.")
     return render(request, 'my-profile.html', {'form': form})
+
+@login_required
+def profile_edit(request):
+    profile = request.user.userprofile
+    form = UserProfileForm(instance=profile)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+
+    return render(request, 'edit-profile.html', {'form': form})

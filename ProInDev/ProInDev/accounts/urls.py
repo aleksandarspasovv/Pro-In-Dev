@@ -1,6 +1,6 @@
 # accounts/urls.py
 from django.urls import path
-from ProInDev.accounts.views import RegisterView, LoginView, profile_view
+from ProInDev.accounts.views import RegisterView, LoginView, profile_view, profile_edit
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -8,4 +8,5 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('profile/', profile_view, name='profile'),
+    path('profile/edit/', profile_edit, name='profile_edit'),
 ]
