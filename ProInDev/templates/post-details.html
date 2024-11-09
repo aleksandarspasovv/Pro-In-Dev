@@ -5,54 +5,52 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            <div class="card card-body my-4 p-4 shadow-sm border-0">
-                <!-- Post Title -->
-                <h2 class="h5 mb-2">{{ post.title }}</h2>
+    <div class="col-lg-8 mx-auto">
+        <!-- Post Details -->
+        <div class="card card-body shadow-sm mb-4">
+            <!-- Post Title -->
+            <h1 class="mb-3">{{ post.title }}</h1>
 
-                <!-- Post Content -->
-                <p class="mb-4">{{ post.content }}</p>
+            <!-- Post Content -->
+            <p>{{ post.content }}</p>
 
-                <!-- Like, Comment, and Share Buttons -->
-                <div class="d-flex gap-3 mb-3">
-                    <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                        <i class="fas fa-thumbs-up me-1"></i> Like
-                    </a>
-                    <a href="#comment-form" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                        <i class="fas fa-comment me-1"></i> Comment
-                    </a>
-                    <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                        <i class="fas fa-share me-1"></i> Share
-                    </a>
+            <!-- Published Date -->
+            <small class="text-muted">Published on {{ post.created_at }}</small>
+        </div>
+
+        <!-- Like, Comment, and Share Buttons -->
+        <div class="d-flex gap-3 mb-3">
+            <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-thumbs-up me-1"></i> Like
+            </a>
+            <a href="#comment-section" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-comment me-1"></i> Comment
+            </a>
+            <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-share me-1"></i> Share
+            </a>
+        </div>
+
+        <!-- Comment Section -->
+        <div id="comment-section" class="mt-4">
+            <h4>Comments</h4>
+
+            <!-- Display Existing Comments -->
+            {% for comment in comments %}
+                <div class="mb-3">
+                    <strong>{{ comment.name }}</strong> <small class="text-muted">{{ comment.created_at }}</small>
+                    <p>{{ comment.content }}</p>
                 </div>
+            {% empty %}
+                <p class="text-muted">No comments yet. Be the first to comment!</p>
+            {% endfor %}
 
-                <!-- Comment Form -->
-                <div id="comment-form">
-                    <form action="{% url 'post-comment' post.pk %}" method="POST" class="mt-3">
-                        {% csrf_token %}
-                        {{ comment_form.as_p }}
-                        <button type="submit" class="btn btn-primary btn-sm mt-2">Post Comment</button>
-                    </form>
-                </div>
-
-                <!-- Display Existing Comments -->
-                <div class="mt-4">
-                    <h5>Comments</h5>
-                    {% for comment in comments %}
-                        <div class="mb-2 border-bottom pb-2">
-                            <strong>{{ comment.name }}</strong>
-                            <small class="text-muted">{{ comment.created_at }}</small>
-                            <p>{{ comment.content }}</p>
-                        </div>
-                    {% empty %}
-                        <p>No comments yet. Be the first to comment!</p>
-                    {% endfor %}
-                </div>
-
-                <!-- Published Date -->
-                <small class="text-muted mt-2 d-block">Published: {{ post.created_at }}</small>
-            </div>
+            <!-- Comment Form -->
+            <form action="{% url 'post-comment' post.pk %}" method="post" class="mt-4">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
         </div>
     </div>
 </div>

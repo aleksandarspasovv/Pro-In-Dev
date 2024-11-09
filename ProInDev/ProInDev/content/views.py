@@ -9,9 +9,8 @@ from ProInDev.content.forms import ContentForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-
 class ContentListView(ListView):
-    model = Post  # Make sure to pull from the Post model if that is the intended blog content
+    model = Post
     template_name = 'blog.html'
     context_object_name = 'posts'
     paginate_by = 25
@@ -42,6 +41,7 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
+        context['comments'] = self.object.comments.all().order_by('-created_at')  # Fetch all comments for this post
         return context
 
 
@@ -55,12 +55,12 @@ def post_comment(request, pk):
             comment.post = post
             comment.name = request.user.username
             comment.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse_lazy('post-detail', args=[post.pk])))
-    return HttpResponseRedirect(reverse_lazy('post-detail', args=[post.pk]))
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[post.pk])))
+    return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
 
 
 class ContentCreateView(CreateView):
     model = Post
-    fields = ['title', 'content', 'image']  # Removed 'visibility'
+    fields = ['title', 'content', 'image']
     template_name = 'create-post.html'
     success_url = reverse_lazy('content-list')
