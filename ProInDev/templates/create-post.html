@@ -16,28 +16,34 @@
                         <form action="{% url 'post_create' %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
 
+                            <!-- Display form errors if any -->
+                            {% if form.errors %}
+                                <div class="alert alert-danger">
+                                    {% for field in form %}
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
                             <!-- Post Title -->
                             <div class="mb-4">
-                                <label for="title" class="form-label">Title</label>
-                                <input type="text" class="form-control rounded-pill shadow-sm" id="title" name="title" placeholder="Enter post title" required>
+                                <label for="id_title" class="form-label">Title</label>
+                                <input type="text" class="form-control rounded-pill shadow-sm" id="id_title" name="title" placeholder="Enter post title" required>
                             </div>
 
-                            <!-- Post Content -->
+                            <!-- Post Content with 2000-character limit -->
                             <div class="mb-4">
-                                <label for="content" class="form-label">Content</label>
-                                <textarea class="form-control rounded-3 shadow-sm" id="content" name="content" rows="4" placeholder="Write your post content here" required></textarea>
+                                <label for="id_body" class="form-label">Content</label>
+                                <textarea class="form-control rounded-3 shadow-sm" id="id_body" name="body" rows="4" placeholder="Write your post content here" maxlength="2000" required></textarea>
+                                <small class="text-muted">Maximum 2000 characters.</small>
                             </div>
-
-{#                            <!-- Post Author -->#}
-{#                            <div class="mb-4">#}
-{#                                <label for="author" class="form-label">Author</label>#}
-{#                                <input type="text" class="form-control rounded-pill shadow-sm" id="author" name="author" placeholder="Enter author name" required>#}
-{#                            </div>#}
 
                             <!-- Post Image -->
                             <div class="mb-4">
-                                <label for="image" class="form-label">Image</label>
-                                <input type="file" class="form-control rounded-3 shadow-sm" id="image" name="image">
+                                <label for="id_media" class="form-label">Image</label>
+                                <input type="file" class="form-control rounded-3 shadow-sm" id="id_media" name="media">
                             </div>
 
                             <!-- Submit Button -->

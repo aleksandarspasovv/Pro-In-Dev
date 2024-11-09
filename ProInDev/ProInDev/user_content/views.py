@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-
+from django.contrib import messages
 from ProInDev.user_content.forms import UserPostForm
 from ProInDev.user_content.models import UserPost
 
@@ -10,6 +10,7 @@ class UserPostListView(LoginRequiredMixin, ListView):
     model = UserPost
     template_name = 'user_content/user_post_list.html'
     context_object_name = 'user_posts'
+    paginate_by = 10
 
     def get_queryset(self):
         return UserPost.objects.filter(author=self.request.user).order_by('-created_at')
@@ -23,7 +24,13 @@ class UserPostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.success(self.request, "Post created successfully!")
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request,
+                       "There was an error in creating your post. Please ensure it meets all requirements.")
+        return super().form_invalid(form)
 
 
 class UserPostUpdateView(LoginRequiredMixin, UpdateView):
@@ -35,6 +42,15 @@ class UserPostUpdateView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         return UserPost.objects.filter(author=self.request.user)
 
+    def form_valid(self, form):
+        messages.success(self.request, "Post updated successfully!")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request,
+                       "There was an error in updating your post. Please ensure it meets all requirements.")
+        return super().form_invalid(form)
+
 
 class UserPostDeleteView(LoginRequiredMixin, DeleteView):
     model = UserPost
@@ -43,3 +59,7 @@ class UserPostDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return UserPost.objects.filter(author=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Post deleted successfully!")
+        return super().delete(request, *args, **kwargs)

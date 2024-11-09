@@ -1,4 +1,3 @@
-# content/views.py
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
@@ -23,7 +22,7 @@ class ContentListView(ListView):
 
 @method_decorator(login_required, name='dispatch')
 class ContentCreateView(CreateView):
-    model = Content
+    model = Post
     form_class = ContentForm
     template_name = 'create-post.html'
     success_url = reverse_lazy('content-list')
@@ -41,7 +40,7 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
-        context['comments'] = self.object.comments.all().order_by('-created_at')  # Fetch all comments for this post
+        context['comments'] = self.object.comments.all().order_by('-created_at')  # Display all comments
         return context
 
 
@@ -53,14 +52,7 @@ def post_comment(request, pk):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
-            comment.name = request.user.username
+            comment.author = request.user  # Set the current user as the author
             comment.save()
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[post.pk])))
     return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
-
-
-class ContentCreateView(CreateView):
-    model = Post
-    fields = ['title', 'content', 'image']
-    template_name = 'create-post.html'
-    success_url = reverse_lazy('content-list')
