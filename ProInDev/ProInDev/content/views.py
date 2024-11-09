@@ -60,6 +60,6 @@ def post_comment(request, pk):
 
 class ContentCreateView(CreateView):
     model = Post
-    fields = ['title', 'content', 'author', 'image']  # Removed 'visibility'
+    fields = ['title', 'content', 'image']  # Removed 'visibility'
     template_name = 'create-post.html'
     success_url = reverse_lazy('post_list')
