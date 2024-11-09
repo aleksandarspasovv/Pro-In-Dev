@@ -5,40 +5,52 @@
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-center align-items-center vh-1 py-1">
-        <div class="col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-5">
-            <div class="card card-body text-center p-4 p-sm-5">
-                <h1 class="mb-2">Sign in</h1>
-                <p class="mb-0">Don't have an account?<a href="{% url 'register' %}"> Click here to sign up</a></p>
-                
-                <!-- Form START -->
-                <form method="post" action="{% url 'login' %}" class="mt-sm-4">
-                    {% csrf_token %}
-                    <!-- Email -->
-                    <div class="mb-3 input-group-lg">
-                        {{ form.username }}
-                    </div>
-                    <!-- Password -->
-                    <div class="mb-3 position-relative">
-                        <div class="input-group input-group-lg">
-                            {{ form.password }}
-                            <span class="input-group-text p-0">
-                                <i class="fa-solid fa-eye-slash cursor-pointer p-2 w-40px"></i>
-                            </span>
+    <div class="row justify-content-center py-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-3 mt-5">
+                <div class="card-header bg-light text-center rounded-top">
+                    <h2 class="mb-0 text-primary">Welcome Back!</h2>
+                    <p class="text-muted">Sign in to your account</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        <!-- Username -->
+                        <div class="mb-4">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" id="username" name="username" class="form-control rounded-pill shadow-sm" placeholder="Enter username" required>
                         </div>
-                    </div>
-                    <!-- Remember me -->
-                    <div class="mb-3 d-sm-flex justify-content-between">
-                        <div>
-                            <input type="checkbox" class="form-check-input" id="rememberCheck">
-                            <label class="form-check-label" for="rememberCheck">Remember me?</label>
+
+                        <!-- Password with Toggle -->
+                        <div class="mb-4 position-relative">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control rounded-pill shadow-sm" placeholder="Enter password" required>
+                                <span class="input-group-text bg-white border-0 position-absolute end-0 me-2 cursor-pointer">
+                                    <i class="fa-solid fa-eye-slash text-muted"></i>
+                                </span>
+                            </div>
                         </div>
-                        <a href="{% url 'password_reset' %}">Forgot password?</a>
-                    </div>
-                    <!-- Button -->
-                    <div class="d-grid"><button type="submit" class="btn btn-lg btn-primary">Login</button></div>
-                </form>
-                <!-- Form END -->
+
+                        <!-- Remember me & Forgot password -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberCheck">
+                                <label class="form-check-label" for="rememberCheck">Remember me</label>
+                            </div>
+                            <a href="{% url 'password_reset' %}" class="text-primary">Forgot password?</a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow">Sign In</button>
+                        </div>
+                    </form>
+
+                    <!-- Sign Up Link -->
+                    <p class="text-center mt-4 mb-0">Don’t have an account? <a href="{% url 'register' %}" class="text-primary">Create one here</a></p>
+                </div>
             </div>
         </div>
     </div>
