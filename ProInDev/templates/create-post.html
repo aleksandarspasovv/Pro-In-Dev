@@ -7,16 +7,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <!-- Create a Post START -->
                 <div class="card shadow border-0 rounded-3">
                     <div class="card-header bg-light text-center rounded-top">
                         <h3 class="mb-0 text-secondary">Create a New Post</h3>
                     </div>
                     <div class="card-body p-5">
-                        <form action="{% url 'post_create' %}" method="POST" enctype="multipart/form-data">
+                        <form action="{% url 'post-create' %}" method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-
-                            <!-- Display form errors if any -->
                             {% if form.errors %}
                                 <div class="alert alert-danger">
                                     {% for field in form %}
@@ -26,34 +23,25 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
-
-                            <!-- Post Title -->
                             <div class="mb-4">
                                 <label for="id_title" class="form-label">Title</label>
                                 <input type="text" class="form-control rounded-pill shadow-sm" id="id_title" name="title" placeholder="Enter post title" required>
                             </div>
-
-                            <!-- Post Content with 2000-character limit -->
                             <div class="mb-4">
                                 <label for="id_body" class="form-label">Content</label>
                                 <textarea class="form-control rounded-3 shadow-sm" id="id_body" name="body" rows="4" placeholder="Write your post content here" maxlength="2000" required></textarea>
                                 <small class="text-muted">Maximum 2000 characters.</small>
                             </div>
-
-                            <!-- Post Image -->
                             <div class="mb-4">
                                 <label for="id_media" class="form-label">Image</label>
                                 <input type="file" class="form-control rounded-3 shadow-sm" id="id_media" name="media">
                             </div>
-
-                            <!-- Submit Button -->
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary rounded-pill shadow">Create Post</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <!-- Create a Post END -->
             </div>
         </div>
     </div>

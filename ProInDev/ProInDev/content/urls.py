@@ -1,10 +1,12 @@
 # content/urls.py
 from django.urls import path
-from ProInDev.content.views import ContentListView, ContentCreateView, PostDetailView, post_comment
+from ProInDev.content.views import PostListView, PostCreateView, PostDetailView, PostUpdateView, PostDeleteView
 
 urlpatterns = [
-    path('', ContentListView.as_view(), name='content-list'),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/comment/', post_comment, name='post-comment'),
-    path('new/', ContentCreateView.as_view(), name='post_create'),
+    path('', PostListView.as_view(), name='post-list'),
+    path('new/', PostCreateView.as_view(), name='create-post'),
+    path('<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('<int:pk>/edit/', PostUpdateView.as_view(), name='post-edit'),
+    path('<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+    path('list/', PostListView.as_view(), name='content-list'),
 ]

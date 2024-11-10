@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     "ProInDev.accounts.apps.AccountsConfig",
     "ProInDev.content.apps.ContentConfig",
     "ProInDev.public.apps.PublicConfig",
-    "ProInDev.user_content.apps.UserContentConfig",
     'bootstrap5',
 ]
 
