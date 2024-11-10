@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 class ContentListView(ListView):
     model = Post
     template_name = 'blog.html'
-    context_object_name = 'posts'
+    context_object_name = 'user_posts'
     paginate_by = 25
 
     def get_queryset(self):
