@@ -15,32 +15,24 @@
         <div class="col-lg-8 mx-auto">
             {% for post in user_posts %}
             <div class="card card-body my-4 p-4 shadow-sm border-0">
-                <!-- Post Title -->
                 <h2 class="h5 mb-2">{{ post.title }}</h2>
-
-                <!-- Post Content with character limit -->
                 <p class="mb-4">
-                    {{ post.body|linebreaksbr|slice:":2000" }} <!-- Restricts display to approximately 2000 characters -->
+                    {{ post.body|linebreaksbr|slice:":2000" }}
                 </p>
-
-                <!-- Like, Comment Buttons (Removed Share as requested) -->
-                <div class="d-flex gap-3 mb-3">
-                    <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                        <i class="fas fa-thumbs-up me-1"></i> Like
+                <div class="d-flex gap-3 mb-3" style="font-size: 1rem;">
+                    <a href="#" class="icon-toggle d-flex align-items-center text-decoration-none">
+                        <i class="fas fa-thumbs-up" style="font-size: 1rem;"></i>
                     </a>
-                    <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                        <i class="fas fa-comment me-1"></i> Comment
+                    <a href="{% url 'post-detail' post.pk %}" class="icon-toggle d-flex align-items-center text-decoration-none">
+                        <i class="fas fa-comment" style="font-size: 1rem;"></i>
                     </a>
                 </div>
-
-                <!-- Published Date -->
                 <small class="text-muted">Published on {{ post.created_at }}</small>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
         <nav aria-label="Page navigation">
             <ul class="pagination">
@@ -67,4 +59,26 @@
         </nav>
     </div>
 </div>
+
+<style>
+    .icon-toggle i {
+        color: gray;
+        transition: color 0.2s;
+    }
+
+    .icon-toggle.active i {
+        color: black;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.icon-toggle').forEach(function (icon) {
+            icon.addEventListener('click', function (event) {
+                event.preventDefault();
+                icon.classList.toggle('active');
+            });
+        });
+    });
+</script>
 {% endblock %}
