@@ -29,6 +29,8 @@
                 </div>
                 <small class="text-muted">Published on {{ post.created_at }}</small>
             </div>
+            {% empty %}
+            <p>No posts available at the moment.</p>
             {% endfor %}
         </div>
     </div>
@@ -65,7 +67,6 @@
         color: gray;
         transition: color 0.2s;
     }
-
     .icon-toggle.active i {
         color: black;
     }

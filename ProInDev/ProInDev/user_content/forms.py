@@ -1,6 +1,7 @@
 from django import forms
 from ProInDev.user_content.models import UserPost
 
+
 class UserPostForm(forms.ModelForm):
     class Meta:
         model = UserPost
