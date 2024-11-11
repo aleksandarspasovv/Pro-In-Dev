@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from ProInDev.accounts.forms import UserRegistrationForm, UserProfileForm
 from ProInDev.accounts.models import UserProfile
 
+
 class RegisterView(View):
     def get(self, request):
         form = UserRegistrationForm()
@@ -21,6 +22,7 @@ class RegisterView(View):
             return redirect('login')
         messages.error(request, "Registration failed. Please correct the errors below.")
         return render(request, 'sign-up.html', {'form': form})
+
 
 class LoginView(View):
     def get(self, request):
@@ -36,6 +38,7 @@ class LoginView(View):
         messages.error(request, "Invalid username or password.")
         return render(request, 'sign-in.html', {'form': form})
 
+
 @login_required
 def profile_view(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
@@ -48,6 +51,7 @@ def profile_view(request):
             return redirect('profile')
         messages.error(request, "There was an error updating your profile.")
     return render(request, 'my-profile.html', {'form': form})
+
 
 @login_required
 def profile_edit(request):

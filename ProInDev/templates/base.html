@@ -11,50 +11,74 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/OverlayScrollbars-master/css/OverlayScrollbars.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/tiny-slider/dist/tiny-slider.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/choices.js/public/assets/styles/choices.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/glightbox-master/dist/css/glightbox.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/dropzone/dist/dropzone.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/flatpickr/dist/flatpickr.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/plyr/plyr.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/vendor/zuck.js/dist/zuck.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+    <script>
+        // Check if the user is authenticated in Django, and use it to set the theme
+        const isUserLoggedIn = {% if user.is_authenticated %} true {% else %} false {% endif %};
+
+        // Function to set the theme (light or dark)
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);  // Store the theme in localStorage
+            // Update the theme toggle icon based on the current theme
+            document.getElementById('theme-icon').className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if a theme is already stored in localStorage
+            const storedTheme = localStorage.getItem('theme');
+
+            if (storedTheme) {
+                // If a theme is stored, use that
+                setTheme(storedTheme);
+            } else {
+                // If no theme is stored, set the default based on the login status
+                setTheme(isUserLoggedIn ? 'light' : 'dark');
+            }
+        });
+
+        // Function to toggle between light and dark theme
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);  // Update the theme and store it in localStorage
+        }
+    </script>
+
     <style>
-        body {
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-            margin: 0;
-        }
-        main {
-            flex: 1;
-        }
-        /* Navbar and logo adjustments */
+        /* Navbar and icon styling */
         .navbar {
-            padding-left: 0;
-            padding-right: 0;
+            padding: 0;
         }
-        .navbar-brand {
-            margin-left: 0;
-            padding-left: 15px;
+        .theme-toggle-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: none;
+            background: transparent;
         }
-        .navbar-brand img {
-            max-width: 150px;
+        .theme-toggle-btn i {
+            font-size: 1.2rem;
         }
-        /* Footer image size */
-        footer .footer-image {
-            max-width: 100px; /* Adjust as needed */
+
+        /* Reduce footer logo size */
+        .footer-image {
+            max-width: 90px;  /* Adjust this value as needed */
             height: auto;
         }
     </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
     <header class="navbar-light fixed-top header-static bg-mode">
         <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid d-flex justify-content-between">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="{% url 'index' %}">
                     <img class="light-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
                     <img class="dark-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
@@ -66,8 +90,9 @@
                         <span></span>
                     </span>
                 </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
-                    <ul class="navbar-nav">
+
+                <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarCollapse">
+                    <ul class="navbar-nav align-items-center">
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'index' %}">Home</a>
                         </li>
@@ -88,6 +113,13 @@
                                     <li><a class="dropdown-item" href="{% url 'register' %}">Sign Up</a></li>
                                 {% endif %}
                             </ul>
+                        </li>
+
+                        <!-- Dark mode toggle button with icon -->
+                        <li class="nav-item">
+                            <button onclick="toggleTheme()" class="theme-toggle-btn ms-2" id="theme-toggle-btn" aria-label="Toggle theme">
+                                <i id="theme-icon" class="bi bi-sun-fill"></i>
+                            </button>
                         </li>
                     </ul>
                 </div>
@@ -112,4 +144,5 @@
 
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
-   
+</body>
+</html>
