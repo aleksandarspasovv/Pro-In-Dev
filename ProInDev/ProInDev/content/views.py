@@ -5,9 +5,10 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from ProInDev.content.models import Post, Comment
 from ProInDev.content.forms import PostForm, CommentForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+
 
 class PostListView(ListView):
     model = Post
@@ -16,20 +17,29 @@ class PostListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
+        queryset = Post.objects.all().order_by('-created_at')
+
+        # Check if the user is authenticated and then access userprofile
         if self.request.user.is_authenticated:
-            return Post.objects.all().order_by('-created_at')
-        return Post.objects.none()
+            if not getattr(self.request.user, 'userprofile', None) or self.request.user.userprofile.role != 'admin':
+                queryset = queryset.filter(approved=True)
+        else:
+            queryset = queryset.filter(approved=True)
+
+        return queryset
+
 
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
     model = Post
-    form_class = PostForm  # Changed to PostForm
+    form_class = PostForm
     template_name = 'create-post.html'
     success_url = reverse_lazy('post-list')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        messages.success(self.request, "Post created successfully!")
+        form.instance.approved = False
+        messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 
 class PostDetailView(DetailView):
@@ -45,7 +55,7 @@ class PostDetailView(DetailView):
 
 class PostUpdateView(UpdateView):
     model = Post
-    form_class = PostForm  # Changed to PostForm
+    form_class = PostForm
     template_name = 'edit-post.html'
     success_url = reverse_lazy('post-list')
 
@@ -61,6 +71,14 @@ class PostDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Post deleted successfully!")
         return super().delete(request, *args, **kwargs)
+
+@user_passes_test(lambda u: u.userprofile.role == 'admin')
+def approve_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.approved = True
+    post.save()
+    messages.success(request, "The post has been approved.")
+    return redirect('post-list')
 
 @login_required
 def post_comment(request, pk):

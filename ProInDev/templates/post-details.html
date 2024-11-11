@@ -6,19 +6,12 @@
 {% block content %}
 <div class="container my-5">
     <div class="col-lg-8 mx-auto">
-        <!-- Post Details -->
         <div class="card card-body shadow-sm mb-4">
-            <!-- Post Title -->
             <h1 class="mb-3">{{ post.title }}</h1>
-
-            <!-- Post Content -->
-            <p>{{ post.content }}</p>
-
-            <!-- Published Date -->
+            <p>{{ post.body }}</p>
             <small class="text-muted">Published on {{ post.created_at }}</small>
         </div>
 
-        <!-- Like, Comment, and Share Buttons -->
         <div class="d-flex gap-3 mb-3">
             <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
                 <i class="fas fa-thumbs-up me-1"></i> Like
@@ -31,11 +24,15 @@
             </a>
         </div>
 
-        <!-- Comment Section -->
+        {% if user.userprofile.role == 'admin' and not post.approved %}
+            <form action="{% url 'post-approve' post.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Approve Post</button>
+            </form>
+        {% endif %}
+
         <div id="comment-section" class="mt-4">
             <h4>Comments</h4>
-
-            <!-- Display Existing Comments -->
             {% for comment in comments %}
                 <div class="mb-3">
                     <strong>{{ comment.name }}</strong> <small class="text-muted">{{ comment.created_at }}</small>
@@ -45,7 +42,6 @@
                 <p class="text-muted">No comments yet. Be the first to comment!</p>
             {% endfor %}
 
-            <!-- Comment Form -->
             <form action="{% url 'post-comment' post.pk %}" method="post" class="mt-4">
                 {% csrf_token %}
                 {{ comment_form.as_p }}
