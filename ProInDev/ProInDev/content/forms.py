@@ -1,6 +1,7 @@
 from django import forms
 from ProInDev.content.models import Post, Comment
 
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
@@ -23,4 +24,7 @@ class PostForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['name', 'email', 'content']
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your comment here'}),
+        }

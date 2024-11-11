@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 
-
 class PostListView(ListView):
     model = Post
     template_name = 'blog.html'
@@ -17,17 +16,11 @@ class PostListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        queryset = Post.objects.all().order_by('-created_at')
-
-        # Check if the user is authenticated and then access userprofile
+        queryset = Post.objects.filter(approved=True).order_by('-created_at')
         if self.request.user.is_authenticated:
-            if not getattr(self.request.user, 'userprofile', None) or self.request.user.userprofile.role != 'admin':
-                queryset = queryset.filter(approved=True)
-        else:
-            queryset = queryset.filter(approved=True)
-
+            if getattr(self.request.user, 'userprofile', None) and self.request.user.userprofile.role == 'admin':
+                queryset = Post.objects.all().order_by('-created_at')
         return queryset
-
 
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
@@ -50,7 +43,7 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
-        context['comments'] = self.object.comments.all().order_by('-created_at')
+        context['comments'] = self.object.comments.filter(approved=True).order_by('-created_at')
         return context
 
 class PostUpdateView(UpdateView):
@@ -80,6 +73,14 @@ def approve_post(request, pk):
     messages.success(request, "The post has been approved.")
     return redirect('post-list')
 
+@user_passes_test(lambda u: u.userprofile.role == 'admin')
+def approve_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.approved = True
+    comment.save()
+    messages.success(request, "The comment has been approved.")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[comment.post.pk])))
+
 @login_required
 def post_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -89,6 +90,26 @@ def post_comment(request, pk):
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
+            comment.approved = False
             comment.save()
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[post.pk])))
+            messages.success(request, "Comment submitted and awaiting approval.")
+            return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
     return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
+
+@login_required
+def like_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[pk])))
+
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user in comment.likes.all():
+        comment.likes.remove(request.user)
+    else:
+        comment.likes.add(request.user)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

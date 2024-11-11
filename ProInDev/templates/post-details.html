@@ -13,18 +13,15 @@
         </div>
 
         <div class="d-flex gap-3 mb-3">
-            <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                <i class="fas fa-thumbs-up me-1"></i> Like
+            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
+                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
             </a>
             <a href="#comment-section" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
                 <i class="fas fa-comment me-1"></i> Comment
             </a>
-            <a href="#" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                <i class="fas fa-share me-1"></i> Share
-            </a>
         </div>
 
-        {% if user.userprofile.role == 'admin' and not post.approved %}
+        {% if user.is_authenticated and user.userprofile.role == 'admin' and not post.approved %}
             <form action="{% url 'post-approve' post.pk %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-success">Approve Post</button>
@@ -35,8 +32,17 @@
             <h4>Comments</h4>
             {% for comment in comments %}
                 <div class="mb-3">
-                    <strong>{{ comment.name }}</strong> <small class="text-muted">{{ comment.created_at }}</small>
+                    <strong>{{ comment.author.username }}</strong> <small class="text-muted">{{ comment.created_at }}</small>
                     <p>{{ comment.content }}</p>
+                    <a href="{% url 'like-comment' comment.id %}" class="text-secondary">
+                        <i class="fas fa-thumbs-up"></i> Like ({{ comment.total_likes }})
+                    </a>
+                    {% if user.is_authenticated and user.userprofile.role == 'admin' and not comment.approved %}
+                        <form action="{% url 'approve-comment' comment.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Approve Comment</button>
+                        </form>
+                    {% endif %}
                 </div>
             {% empty %}
                 <p class="text-muted">No comments yet. Be the first to comment!</p>
