@@ -1,7 +1,7 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <title>{% block title %}ProInDev - Social Media Platform{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,6 +21,16 @@
     <link rel="stylesheet" href="{% static 'assets/vendor/zuck.js/dist/zuck.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
     <style>
+        /* Flexbox-based sticky footer */
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            margin: 0;
+        }
+        main {
+            flex: 1;
+        }
         .navbar-brand-item {
             max-width: 150px;
             height: auto;
@@ -77,7 +87,9 @@
     </main>
 
     <footer class="text-center py-5">
-        <p class="mb-0">©2024 <a href="https://www.webestica.com/" target="_blank">Webestica</a></p>
+        <div class="mt-3">
+            <span class="mb-0">©2024 <a href="https://www.webestica.com/" target="_blank">Webestica</a></span>
+        </div>
     </footer>
 
     <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

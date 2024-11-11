@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from ProInDev.accounts.forms import UserRegistrationForm, UserProfileForm
+from ProInDev.accounts.models import UserProfile
 
 class RegisterView(View):
     def get(self, request):
@@ -37,7 +38,7 @@ class LoginView(View):
 
 @login_required
 def profile_view(request):
-    profile = request.user.userprofile
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     form = UserProfileForm(instance=profile)
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
@@ -50,7 +51,7 @@ def profile_view(request):
 
 @login_required
 def profile_edit(request):
-    profile = request.user.userprofile
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
     form = UserProfileForm(instance=profile)
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
