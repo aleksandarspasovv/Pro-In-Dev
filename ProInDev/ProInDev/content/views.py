@@ -1,13 +1,15 @@
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from ProInDev.content.models import Post, Comment
-from ProInDev.content.forms import PostForm, CommentForm
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+
+from ProInDev.content.forms import PostForm, CommentForm
+from ProInDev.content.models import Post, Comment
+
 
 class PostListView(ListView):
     model = Post

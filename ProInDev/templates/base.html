@@ -14,40 +14,31 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <script>
-        // Check if the user is authenticated in Django, and use it to set the theme
         const isUserLoggedIn = {% if user.is_authenticated %} true {% else %} false {% endif %};
 
-        // Function to set the theme (light or dark)
         function setTheme(theme) {
             document.documentElement.setAttribute('data-bs-theme', theme);
-            localStorage.setItem('theme', theme);  // Store the theme in localStorage
-            // Update the theme toggle icon based on the current theme
+            localStorage.setItem('theme', theme);
             document.getElementById('theme-icon').className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Check if a theme is already stored in localStorage
             const storedTheme = localStorage.getItem('theme');
-
             if (storedTheme) {
-                // If a theme is stored, use that
                 setTheme(storedTheme);
             } else {
-                // If no theme is stored, set the default based on the login status
                 setTheme(isUserLoggedIn ? 'light' : 'dark');
             }
         });
 
-        // Function to toggle between light and dark theme
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            setTheme(newTheme);  // Update the theme and store it in localStorage
+            setTheme(newTheme);
         }
     </script>
 
     <style>
-        /* Navbar and icon styling */
         .navbar {
             padding: 0;
         }
@@ -64,10 +55,8 @@
         .theme-toggle-btn i {
             font-size: 1.2rem;
         }
-
-        /* Reduce footer logo size */
         .footer-image {
-            max-width: 90px;  /* Adjust this value as needed */
+            max-width: 90px;
             height: auto;
         }
     </style>
@@ -114,8 +103,6 @@
                                 {% endif %}
                             </ul>
                         </li>
-
-                        <!-- Dark mode toggle button with icon -->
                         <li class="nav-item">
                             <button onclick="toggleTheme()" class="theme-toggle-btn ms-2" id="theme-toggle-btn" aria-label="Toggle theme">
                                 <i id="theme-icon" class="bi bi-sun-fill"></i>
