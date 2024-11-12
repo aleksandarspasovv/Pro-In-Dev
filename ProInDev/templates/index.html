@@ -4,17 +4,19 @@
 {% block title %}Welcome to Social - Network, Community, and Event{% endblock %}
 
 {% block content %}
-<!-- Main container START -->
 <div class="container text-center" style="max-width: 600px; padding-top: 50px;">
-
     <!-- Logo and Title START -->
     <div class="mb-4">
-        <img src="{% static 'assets/images/custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
+        {% if user.is_authenticated %}
+            <img src="{% static 'assets/images/custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
+        {% else %}
+            <img src="{% static 'assets/images/custom_logo_white.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
+        {% endif %}
         <h1 class="display-6 mt-3">Progress In Development</h1>
         {% if user.is_authenticated %}
             <p>You are now logged in</p>
         {% else %}
-        <p class="lead">Created for SoftUni Students</p>
+            <p class="lead">Created for SoftUni Students</p>
         {% endif %}
     </div>
     <!-- Logo and Title END -->
@@ -24,13 +26,13 @@
         <div class="row">
             <div class="col-md-4 mb-4">
                 {% if user.is_authenticated %}
-                <h3>Explore Content</h3>
-                <p>Check out the latest posts and discussions on the platform.</p>
-                <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
+                    <h3>Explore Content</h3>
+                    <p>Check out the latest posts and discussions on the platform.</p>
+                    <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
                 {% else %}
                     <h3>Explore Public Posts</h3>
                     <p>Discover insights and updates in our collection of public posts, accessible to everyone.</p>
-                    <a href="{% url 'content-list'%}" class='btn btn-primary'> Browse Content</a>
+                    <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
                 {% endif %}
             </div>
             <div class="col-md-4 mb-4">
@@ -45,7 +47,6 @@
                 {% endif %}
             </div>
             <div class="col-md-4 mb-4">
-
                 {% if user.is_authenticated %}
                     <h3>Edit your Account</h3>
                     <p>Change your details or password in your account settings</p>
@@ -60,5 +61,4 @@
     </section>
     <!-- Content Options END -->
 </div>
-<!-- Main container END -->
 {% endblock %}
