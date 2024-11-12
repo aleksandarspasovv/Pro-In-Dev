@@ -39,6 +39,19 @@
     </script>
 
     <style>
+        /* Minimize spacing */
+        body, main {
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            margin: 0;
+            padding: 0; /* Remove all padding */
+        }
+        .container {
+            margin-top: 10px; /* Minimal spacing to avoid overlap */
+            padding: 0;
+        }
         .navbar {
             padding: 0;
         }
@@ -115,7 +128,7 @@
     </header>
 
     <main>
-        <div class="container my-5">
+        <div class="container">
             {% block content %}{% endblock %}
         </div>
     </main>

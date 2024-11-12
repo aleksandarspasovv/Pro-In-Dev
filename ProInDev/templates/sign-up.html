@@ -4,10 +4,10 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center py-5">
+<div class="container" style="margin-top: 0; padding-top: 20px;">
+    <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card shadow-sm border-0 rounded-3 mt-5">
+            <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-light text-center rounded-top">
                     <h2 class="mb-0 text-primary">Create an Account</h2>
                     <p class="text-muted">Join our community</p>
@@ -28,25 +28,30 @@
                             <input type="email" id="email" name="email" class="form-control rounded-pill shadow-sm" placeholder="Enter your email" required>
                         </div>
 
-                        <!-- Password -->
-                        <div class="mb-4 position-relative">
+                        <!-- Password with Show Button -->
+                        <div class="mb-4">
                             <label for="password1" class="form-label">Password</label>
                             <div class="input-group">
-                                <input type="password" id="password1" name="password1" class="form-control rounded-pill shadow-sm" placeholder="Create a password" required>
-                                <span class="input-group-text bg-white border-0 position-absolute end-0 me-2 cursor-pointer">
-                                    <i class="fa-solid fa-eye-slash text-muted"></i>
-                                </span>
+                                <input type="password" id="password1" name="password1" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Create a password" required>
+                                <button type="button" onclick="togglePasswordVisibility('password1')" class="btn btn-outline-primary rounded-pill shadow-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    Show Password
+                                </button>
                             </div>
                         </div>
 
-                        <!-- Password Confirmation -->
+                        <!-- Password Confirmation with Show Button -->
                         <div class="mb-4">
                             <label for="password2" class="form-label">Confirm Password</label>
-                            <input type="password" id="password2" name="password2" class="form-control rounded-pill shadow-sm" placeholder="Re-enter password" required>
+                            <div class="input-group">
+                                <input type="password" id="password2" name="password2" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Re-enter password" required>
+                                <button type="button" onclick="togglePasswordVisibility('password2')" class="btn btn-outline-primary rounded-pill shadow-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    Show Password
+                                </button>
+                            </div>
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="d-grid">
+                        <div class="d-grid mt-4">
                             <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow">Sign Up</button>
                         </div>
                     </form>
@@ -58,4 +63,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    function togglePasswordVisibility(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const showPasswordButton = event.target;
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            showPasswordButton.textContent = "Hide Password";
+        } else {
+            passwordField.type = "password";
+            showPasswordButton.textContent = "Show Password";
+        }
+    }
+</script>
 {% endblock %}
