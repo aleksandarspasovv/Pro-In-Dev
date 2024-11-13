@@ -1,16 +1,15 @@
 from django import forms
 from ProInDev.content.models import Post, Comment
 
-
 class PostForm(forms.ModelForm):
+    public = forms.BooleanField(required=False, label="Make this post public (visible to everyone)")
+
     class Meta:
         model = Post
-        fields = ['title', 'body', 'media']
+        fields = ['title', 'body', 'media', 'public']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter post title'}),
-            'body': forms.Textarea(
-                attrs={'class': 'form-control', 'placeholder': 'Write your post content here', 'maxlength': '2000'}
-            ),
+            'body': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your post content here', 'maxlength': '2000'}),
             'media': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
@@ -19,7 +18,6 @@ class PostForm(forms.ModelForm):
         if body and len(body) > 2000:
             raise forms.ValidationError("Content cannot exceed 2000 characters.")
         return body
-
 
 class CommentForm(forms.ModelForm):
     class Meta:

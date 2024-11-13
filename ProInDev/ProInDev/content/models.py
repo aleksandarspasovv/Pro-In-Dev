@@ -10,6 +10,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     approved = models.BooleanField(default=False)
+    public = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
 
     def total_likes(self):

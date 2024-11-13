@@ -1,15 +1,12 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-
 from ProInDev.content.forms import PostForm, CommentForm
 from ProInDev.content.models import Post, Comment
-
 
 class PostListView(ListView):
     model = Post
@@ -18,22 +15,26 @@ class PostListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        queryset = Post.objects.filter(approved=True).order_by('-created_at')
         if self.request.user.is_authenticated:
-            if getattr(self.request.user, 'userprofile', None) and self.request.user.userprofile.role == 'admin':
-                queryset = Post.objects.all().order_by('-created_at')
-        return queryset
+            if self.request.user.is_superuser:
+                return Post.objects.all().order_by('-created_at')
+            else:
+                return Post.objects.filter(approved=True).order_by('-created_at')
+        else:
+            return Post.objects.filter(public=True, approved=True).order_by('-created_at')
 
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
     template_name = 'create-post.html'
-    success_url = reverse_lazy('post-list')
+    success_url = reverse_lazy('content-list')
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.approved = False
+        if not self.request.user.is_superuser:
+            form.instance.public = False
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 
@@ -44,15 +45,18 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comment_form'] = CommentForm()
-        context['comments'] = self.object.comments.filter(approved=True).order_by('-created_at')
+        if self.request.user.is_authenticated:
+            context['comment_form'] = CommentForm()
+            context['comments'] = self.object.comments.filter(approved=True).order_by('-created_at')
+        else:
+            context['comments'] = None
         return context
 
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'edit-post.html'
-    success_url = reverse_lazy('post-list')
+    success_url = reverse_lazy('content-list')
 
     def form_valid(self, form):
         messages.success(self.request, "Post updated successfully!")
@@ -61,21 +65,21 @@ class PostUpdateView(UpdateView):
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'confirm-delete.html'
-    success_url = reverse_lazy('post-list')
+    success_url = reverse_lazy('content-list')
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Post deleted successfully!")
         return super().delete(request, *args, **kwargs)
 
-@user_passes_test(lambda u: u.userprofile.role == 'admin')
+@user_passes_test(lambda u: u.is_superuser)
 def approve_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.approved = True
     post.save()
     messages.success(request, "The post has been approved.")
-    return redirect('post-list')
+    return redirect('content-list')
 
-@user_passes_test(lambda u: u.userprofile.role == 'admin')
+@user_passes_test(lambda u: u.is_superuser)
 def approve_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.approved = True
