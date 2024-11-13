@@ -7,32 +7,32 @@
 <div class="container my-5">
     <h1 class="text-center mb-5">Latest Blog Posts</h1>
 
-    {% if not user.is_authenticated %}
+    {% if user.is_authenticated %}
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% for post in user_posts %}
+                <div class="card card-body my-4 p-4 shadow-sm border-0">
+                    <h2 class="h5 mb-2">{{ post.title }}</h2>
+                    <p class="mb-4">
+                        {{ post.body|linebreaksbr|truncatechars:2000 }}
+                    </p>
+                    <div class="d-flex gap-3 mb-3" style="font-size: 1rem;">
+                        <a href="{% url 'like-post' post.pk %}" class="d-flex align-items-center text-decoration-none">
+                            <i class="fas fa-thumbs-up"></i> Like ({{ post.total_likes }})
+                        </a>
+                        <a href="{% url 'post-detail' post.pk %}" class="d-flex align-items-center text-decoration-none">
+                            <i class="fas fa-comment"></i> Comment
+                        </a>
+                    </div>
+                    <small class="text-muted">Published on {{ post.created_at|date:"F j, Y" }}</small>
+                </div>
+                {% empty %}
+                <p class="text-center">No posts available at the moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
         <p class="alert alert-info text-center">Log in to see more posts and engage with the community!</p>
     {% endif %}
-
-    <div class="row">
-        <div class="col-lg-8 mx-auto">
-            {% for post in user_posts %}
-            <div class="card card-body my-4 p-4 shadow-sm border-0">
-                <h2 class="h5 mb-2">{{ post.title }}</h2>
-                <p class="mb-4">
-                    {{ post.body|linebreaksbr|truncatechars:2000 }}
-                </p>
-                <div class="d-flex gap-3 mb-3" style="font-size: 1rem;">
-                    <a href="{% url 'like-post' post.pk %}" class="d-flex align-items-center text-decoration-none">
-                        <i class="fas fa-thumbs-up"></i> Like ({{ post.total_likes }})
-                    </a>
-                    <a href="{% url 'post-detail' post.pk %}" class="d-flex align-items-center text-decoration-none">
-                        <i class="fas fa-comment"></i> Comment
-                    </a>
-                </div>
-                <small class="text-muted">Published on {{ post.created_at|date:"F j, Y" }}</small>
-            </div>
-            {% empty %}
-            <p class="text-center">No posts available at the moment.</p>
-            {% endfor %}
-        </div>
-    </div>
 </div>
 {% endblock %}
