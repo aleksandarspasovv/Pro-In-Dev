@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #121212;">
 <head>
     {% load static %}
-    <title>{% block title %}ProInDev - Social Media Platform{% endblock %}</title>
+    <title>ProInDev - Social Media Platform</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="ProInDev - A Social Media Platform">
@@ -14,16 +14,24 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <script>
+        // Apply dark theme background to avoid white flicker
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.body.style.backgroundColor = '#121212';
+        document.documentElement.style.backgroundColor = '#121212';
+
         // Define setTheme function globally
         function setTheme(theme) {
             console.log('Setting theme to:', theme);
             document.documentElement.setAttribute('data-bs-theme', theme);
             localStorage.setItem('theme', theme);
+
+            // Update background color based on theme
+            document.body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+            document.documentElement.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+
             var themeIcon = document.getElementById('theme-icon');
             if (themeIcon) {
                 themeIcon.className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
-            } else {
-                console.log('theme-icon element not found');
             }
         }
 
@@ -31,17 +39,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const isUserLoggedIn = {% if user.is_authenticated %} true {% else %} false {% endif %};
             console.log('User is logged in:', isUserLoggedIn);
-
-            // Temporarily ignore stored theme for testing
-            // const storedTheme = localStorage.getItem('theme');
-            // console.log('Stored theme:', storedTheme);
-
-            // Use login status to set theme
-            // if (storedTheme) {
-            //     setTheme(storedTheme);
-            // } else {
-                setTheme(isUserLoggedIn ? 'light' : 'dark');
-            // }
+            setTheme(isUserLoggedIn ? 'light' : 'dark');
         });
 
         // Toggle theme on button click
@@ -53,22 +51,37 @@
     </script>
 
     <style>
-        /* Minimize spacing */
-        body, main {
+        /* Set default dark theme styles */
+        html, body {
+            background-color: #121212; /* Dark theme background color */
+            color: #ffffff; /* Optional: set default text color for dark mode */
             margin: 0;
             padding: 0;
+            height: 100%; /* Full height to make the footer placement work */
+            display: flex;
+            flex-direction: column;
         }
+        
+        /* Main content takes up all space except footer */
+        main {
+            flex: 1;
+            padding: 0;
+        }
+
         header {
             margin: 0;
-            padding: 0; /* Remove all padding */
-        }
-        .container {
-            margin-top: 10px; /* Minimal spacing to avoid overlap */
             padding: 0;
         }
+
+        .container {
+            margin-top: 10px;
+            padding: 0;
+        }
+
         .navbar {
             padding: 0;
         }
+
         .theme-toggle-btn {
             display: flex;
             align-items: center;
@@ -79,19 +92,37 @@
             border: none;
             background: transparent;
         }
+
         .theme-toggle-btn i {
             font-size: 1.2rem;
         }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #121212;
+            color: #ffffff;
+            width: 100%;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .footer-image {
             max-width: 90px;
             height: auto;
         }
+
     </style>
 
     {% block extra_css %}{% endblock %}
 </head>
 
-<body>
+<body style="background-color: #121212;">
     <header class="navbar-light fixed-top header-static bg-mode">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid d-flex justify-content-between align-items-center">
@@ -147,16 +178,14 @@
         </div>
     </main>
 
-    <footer class="text-center py-5">
-        <div class="mt-3">
-            <span class="mb-0">©2024 <a href="https://www.webestica.com/" target="_blank">Webestica</a></span>
-            <div>
-                <img src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731301669/sdawdadwled-removebg-preview_squljd.png" alt="Footer Image" class="footer-image mb-3">
-            </div>
+    <footer>
+        <div class="footer-content">
+            <span>©2024 <a href="https://www.webestica.com/" target="_blank" style="color: #007bff; text-decoration: none;">Webestica</a></span>
+            <img src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731301669/sdawdadwled-removebg-preview_squljd.png" alt="Footer Image" class="footer-image mb-3">
         </div>
     </footer>
 
-    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+o3o1l7z4Ed4BOEf1kMl6ZRhrHe0o" crossorigin="anonymous"></script>
     <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
 </body>
 </html>
