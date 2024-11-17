@@ -14,35 +14,26 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <script>
-        // Apply dark theme background to avoid white flicker
         document.documentElement.setAttribute('data-bs-theme', 'dark');
         document.body.style.backgroundColor = '#121212';
         document.documentElement.style.backgroundColor = '#121212';
 
-        // Define setTheme function globally
         function setTheme(theme) {
-            console.log('Setting theme to:', theme);
             document.documentElement.setAttribute('data-bs-theme', theme);
             localStorage.setItem('theme', theme);
-
-            // Update background color based on theme
             document.body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
             document.documentElement.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
-
             var themeIcon = document.getElementById('theme-icon');
             if (themeIcon) {
                 themeIcon.className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
             }
         }
 
-        // Set initial theme based on user authentication status
         document.addEventListener('DOMContentLoaded', () => {
             const isUserLoggedIn = {% if user.is_authenticated %} true {% else %} false {% endif %};
-            console.log('User is logged in:', isUserLoggedIn);
             setTheme(isUserLoggedIn ? 'light' : 'dark');
         });
 
-        // Toggle theme on button click
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -51,37 +42,30 @@
     </script>
 
     <style>
-        /* Set default dark theme styles */
         html, body {
-            background-color: #121212; /* Dark theme background color */
-            color: #ffffff; /* Optional: set default text color for dark mode */
+            background-color: #121212;
+            color: #ffffff;
             margin: 0;
             padding: 0;
-            height: 100%; /* Full height to make the footer placement work */
+            height: 100%;
             display: flex;
             flex-direction: column;
         }
-        
-        /* Main content takes up all space except footer */
         main {
             flex: 1;
             padding: 0;
         }
-
         header {
             margin: 0;
             padding: 0;
         }
-
         .container {
             margin-top: 10px;
             padding: 0;
         }
-
         .navbar {
             padding: 0;
         }
-
         .theme-toggle-btn {
             display: flex;
             align-items: center;
@@ -92,12 +76,9 @@
             border: none;
             background: transparent;
         }
-
         .theme-toggle-btn i {
             font-size: 1.2rem;
         }
-
-        /* Footer styling */
         footer {
             text-align: center;
             padding: 20px;
@@ -105,18 +86,15 @@
             color: #ffffff;
             width: 100%;
         }
-
         .footer-content {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
         .footer-image {
             max-width: 90px;
             height: auto;
         }
-
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -130,25 +108,14 @@
                     <img class="light-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
                     <img class="dark-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
                 </a>
-                <button class="navbar-toggler me-3 icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-animation">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </span>
+                <button class="navbar-toggler me-3 btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarCollapse">
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'index' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'post-list' %}">Feed</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'create-post' %}">Create Post</a>
-                        </li>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'post-list' %}">Feed</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create-post' %}">Create Post</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
                             <ul class="dropdown-menu" aria-labelledby="accountDropdown">
@@ -185,7 +152,7 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+o3o1l7z4Ed4BOEf1kMl6ZRhrHe0o" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
 </body>
 </html>
