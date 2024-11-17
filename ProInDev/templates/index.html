@@ -5,60 +5,104 @@
 
 {% block content %}
 <div class="container text-center" style="max-width: 600px; padding-top: 50px;">
-    <!-- Logo and Title START -->
     <div class="mb-4">
-        {% if user.is_authenticated %}
-            <img src="{% static 'assets/images/custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
-        {% else %}
-            <img src="{% static 'assets/images/custom_logo_white.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
-        {% endif %}
+        <img id="theme-logo" src="{% static 'assets/images/custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
         <h1 class="display-6 mt-3">Progress In Development</h1>
         {% if user.is_authenticated %}
-            <p>You are now logged in</p>
+            <p id="login-status" class="theme-text">You are now logged in</p>
         {% else %}
-            <p class="lead">Created for SoftUni Students</p>
+            <p class="lead theme-text">Created for SoftUni Students</p>
         {% endif %}
     </div>
-    <!-- Logo and Title END -->
 
-    <!-- Content Options START -->
     <section class="mb-5">
         <div class="row">
             <div class="col-md-4 mb-4">
                 {% if user.is_authenticated %}
-                    <h3>Explore Content</h3>
-                    <p>Check out the latest posts and discussions on the platform.</p>
+                    <h3 class="theme-text">Explore Content</h3>
+                    <p class="theme-text">Check out the latest posts and discussions on the platform.</p>
                     <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
                 {% else %}
-                    <h3>Explore Public Posts</h3>
-                    <p>Discover insights and updates in our collection of public posts, accessible to everyone.</p>
+                    <h3 class="theme-text">Explore Public Posts</h3>
+                    <p class="theme-text">Discover insights and updates in our collection of public posts, accessible to everyone.</p>
                     <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
                 {% endif %}
             </div>
             <div class="col-md-4 mb-4">
                 {% if user.is_authenticated %}
-                    <h3>Create a Post</h3>
-                    <p>Share your thoughts with the community.</p>
+                    <h3 class="theme-text">Create a Post</h3>
+                    <p class="theme-text">Share your thoughts with the community.</p>
                     <a href="{% url 'create-post' %}" class="btn btn-secondary">Create Post</a>
                 {% else %}
                     <div class="col-mb-4 or-section">
-                        <img class="dark-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png" alt="&" style="width: 100px; height: auto;">
+                        <img id="theme-image" class="navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png" alt="&" style="width: 100px; height: auto;">
                     </div>
                 {% endif %}
             </div>
             <div class="col-md-4 mb-4">
                 {% if user.is_authenticated %}
-                    <h3>Edit your Account</h3>
-                    <p>Change your details or password in your account settings</p>
+                    <h3 class="theme-text">Edit your Account</h3>
+                    <p class="theme-text">Change your details or password in your account settings</p>
                     <a href="{% url 'profile' %}" class="btn btn-success">View Profile</a>
                 {% else %}
-                    <h3>Connect with Members</h3>
-                    <p>Engage with members across the platform by signing up/login and create posts.</p>
+                    <h3 class="theme-text">Connect with Members</h3>
+                    <p class="theme-text">Engage with members across the platform by signing up/login and create posts.</p>
                     <a href="{% url 'register' %}" class="btn btn-success">Sign Up</a>
                 {% endif %}
             </div>
         </div>
     </section>
-    <!-- Content Options END -->
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const logo = document.getElementById('theme-logo');
+        const themeTextElements = document.querySelectorAll('.theme-text');
+        const darkModeItems = document.querySelectorAll('.dark-mode-item');
+        const themeImage = document.getElementById('theme-image');
+        const body = document.body;
+
+        if (currentTheme === 'dark') {
+            logo.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731817414/oie_006YexpOcd9v_tlvwi4-modified_aheyzg.png";
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+            if (themeImage) {
+                themeImage.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731817124/Untitled-Photoroom_edchpf-modified_ebnhjv.png";
+            }
+        } else {
+            logo.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png";
+            body.classList.add('light-mode');
+            body.classList.remove('dark-mode');
+            if (themeImage) {
+                themeImage.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png";
+            }
+        }
+
+        themeTextElements.forEach((element) => {
+            if (currentTheme === 'dark') {
+                element.classList.add('text-light');
+                element.classList.remove('text-dark');
+            } else {
+                element.classList.add('text-dark');
+                element.classList.remove('text-light');
+            }
+        });
+
+        darkModeItems.forEach((item) => {
+            if (currentTheme === 'dark') {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    function toggleTheme() {
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);
+        window.location.reload();
+    }
+</script>
 {% endblock %}

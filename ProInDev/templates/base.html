@@ -14,9 +14,10 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <script>
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
-        document.body.style.backgroundColor = '#121212';
-        document.documentElement.style.backgroundColor = '#121212';
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            setTheme(savedTheme);
+        });
 
         function setTheme(theme) {
             document.documentElement.setAttribute('data-bs-theme', theme);
@@ -27,12 +28,24 @@
             if (themeIcon) {
                 themeIcon.className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const isUserLoggedIn = {% if user.is_authenticated %} true {% else %} false {% endif %};
-            setTheme(isUserLoggedIn ? 'light' : 'dark');
-        });
+            const logo = document.getElementById('theme-logo');
+            const themeTextElements = document.querySelectorAll('.theme-text');
+
+            if (theme === 'dark') {
+                logo.src = "{% static 'assets/images/custom_logo_white.svg' %}";
+                themeTextElements.forEach((element) => {
+                    element.classList.add('text-light');
+                    element.classList.remove('text-dark');
+                });
+            } else {
+                logo.src = "{% static 'assets/images/custom_logo.svg' %}";
+                themeTextElements.forEach((element) => {
+                    element.classList.add('text-dark');
+                    element.classList.remove('text-light');
+                });
+            }
+        }
 
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-bs-theme');
@@ -105,8 +118,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="{% url 'index' %}">
-                    <img class="light-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
-                    <img class="dark-mode-item navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png" alt="ProInDev Logo">
+                    <img id="theme-logo" class="navbar-brand-item" src="{% static 'assets/images/custom_logo_white.svg' %}" alt="ProInDev Logo">
                 </a>
                 <button class="navbar-toggler me-3 btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -119,7 +131,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
                             <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                                {% if user.is_authenticated %}
+                                {% if request.user.is_authenticated %}
                                     <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
                                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                                 {% else %}
@@ -130,7 +142,7 @@
                         </li>
                         <li class="nav-item">
                             <button onclick="toggleTheme()" class="theme-toggle-btn ms-2" id="theme-toggle-btn" aria-label="Toggle theme">
-                                <i id="theme-icon" class="bi bi-sun-fill"></i>
+                                <i id="theme-icon" class="bi bi-moon-stars-fill"></i>
                             </button>
                         </li>
                     </ul>
