@@ -6,7 +6,7 @@
 {% block content %}
 <div class="container text-center" style="max-width: 600px; padding-top: 50px;">
     <div class="mb-4">
-        <img id="theme-logo" src="{% static 'assets/images/custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
+        <img id="theme-logo" src="{% static 'assets/images/custom_logo_white.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 150px; height: auto;">
         <h1 class="display-6 mt-3">Progress In Development</h1>
         {% if user.is_authenticated %}
             <p id="login-status" class="theme-text">You are now logged in</p>
@@ -32,7 +32,7 @@
                 {% if user.is_authenticated %}
                     <h3 class="theme-text">Create a Post</h3>
                     <p class="theme-text">Share your thoughts with the community.</p>
-                    <a href="{% url 'create-post' %}" class="btn btn-secondary">Create Post</a>
+                    <a href="{% url 'create-post' %}" class="btn btn-secondary" style="border: 2px solid white;">Create Post</a>
                 {% else %}
                     <div class="col-mb-4 or-section">
                         <img id="theme-image" class="navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png" alt="&" style="width: 100px; height: auto;">
