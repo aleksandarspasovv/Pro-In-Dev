@@ -1,11 +1,16 @@
-p{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Latest Blog Posts{% endblock %}
+{% block title %}Latest Posts{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h1 class="text-center mb-5">Latest Blog Posts</h1>
+<div class="container mt-3">
+    <div class="text-center mb-3">
+        <h1 class="d-flex align-items-center justify-content-center mb-1" style="margin-top: 0;">
+            Latest Posts
+        </h1>
+        <img src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731299222/file_fjf6ef.png" alt="Top Logo" style="width: 130px; height: auto;">
+    </div>
 
     {% if user.is_authenticated %}
         <div class="row">
@@ -13,11 +18,9 @@ p{% extends "base.html" %}
                 {% for post in user_posts %}
                 <div class="card card-body my-4 p-4 shadow-sm border-0">
                     <h2 class="h5 mb-2">{{ post.title }}</h2>
-
                     {% if post.media %}
                         <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid mb-3 d-block mx-auto" style="width: 200px; height: auto;">
                     {% endif %}
-
                     <p class="mb-4">
                         {{ post.body|linebreaksbr|truncatechars:2000 }}
                     </p>
@@ -37,17 +40,14 @@ p{% extends "base.html" %}
             </div>
         </div>
     {% else %}
-        <p class="alert alert-info text-center">Log in to see more posts and engage with the community!</p>
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 {% for post in user_posts %}
                 <div class="card card-body my-4 p-4 shadow-sm border-0">
                     <h2 class="h5 mb-2">{{ post.title }}</h2>
-
                     {% if post.media %}
                         <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid mb-3 d-block mx-auto" style="width: 150px; height: auto;">
                     {% endif %}
-
                     <p class="mb-4">
                         {{ post.body|linebreaksbr|truncatechars:2000 }}
                     </p>
@@ -58,6 +58,7 @@ p{% extends "base.html" %}
                 {% endfor %}
             </div>
         </div>
+        <p class="alert alert-info text-center">Log in to see more posts and engage with the community!</p>
     {% endif %}
 </div>
 {% endblock %}
