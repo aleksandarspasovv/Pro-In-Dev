@@ -35,7 +35,7 @@
                     <a href="{% url 'create-post' %}" class="btn btn-secondary" style="border: 2px solid white;">Create Post</a>
                 {% else %}
                     <div class="col-mb-4 or-section">
-                        <img id="theme-image" class="navbar-brand-item" src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png" alt="&" style="width: 100px; height: auto;">
+                        <img id="theme-image" class="navbar-brand-item" src="{% static 'assets/images/logos_variations/custom_logo.svg' %}" alt="&" style="width: 100px; height: auto;">
                     </div>
                 {% endif %}
             </div>
@@ -64,18 +64,18 @@
         const body = document.body;
 
         if (currentTheme === 'dark') {
-            logo.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731817414/oie_006YexpOcd9v_tlvwi4-modified_aheyzg.png";
+            logo.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
             body.classList.add('dark-mode');
             body.classList.remove('light-mode');
             if (themeImage) {
-                themeImage.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731817124/Untitled-Photoroom_edchpf-modified_ebnhjv.png";
+                themeImage.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
             }
         } else {
-            logo.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1730919779/oie_006YexpOcd9v_tlvwi4.png";
+            logo.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
             body.classList.add('light-mode');
             body.classList.remove('dark-mode');
             if (themeImage) {
-                themeImage.src = "https://res.cloudinary.com/drbh7hg4h/image/upload/v1731461739/Untitled-Photoroom_edchpf.png";
+                themeImage.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
             }
         }
 

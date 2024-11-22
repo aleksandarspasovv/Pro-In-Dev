@@ -33,13 +33,13 @@
             const themeTextElements = document.querySelectorAll('.theme-text');
 
             if (theme === 'dark') {
-                logo.src = "{% static 'assets/images/custom_logo_white.svg' %}";
+                logo.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
                 themeTextElements.forEach((element) => {
                     element.classList.add('text-light');
                     element.classList.remove('text-dark');
                 });
             } else {
-                logo.src = "{% static 'assets/images/custom_logo.svg' %}";
+                logo.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
                 themeTextElements.forEach((element) => {
                     element.classList.add('text-dark');
                     element.classList.remove('text-light');
@@ -119,7 +119,7 @@
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="{% url 'index' %}">
-                    <img id="theme-logo" class="navbar-brand-item" src="{% static 'assets/images/custom_logo_white.svg' %}" alt="ProInDev Logo">
+                    <img id="theme-logo" class="navbar-brand-item" src="{% static 'assets/images/logos_variations/custom_logo_white.svg' %}" alt="ProInDev Logo">
                 </a>
                 <button class="navbar-toggler me-3 btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
