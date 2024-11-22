@@ -2,6 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Post(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -12,12 +20,14 @@ class Post(models.Model):
     approved = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="posts")
 
     def total_likes(self):
         return self.likes.count()
 
     def __str__(self):
         return self.title
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)

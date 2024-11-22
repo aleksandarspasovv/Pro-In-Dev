@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from ProInDev.content.forms import PostForm, CommentForm
-from ProInDev.content.models import Post, Comment
+from .forms import PostForm, CommentForm
+from .models import Post, Comment, Category
 
 
 class PostListView(ListView):
@@ -16,13 +16,18 @@ class PostListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
+        category_filter = self.request.GET.get('category', 'all')
+        queryset = Post.objects.filter(approved=True, public=True)
         if self.request.user.is_authenticated:
-            if self.request.user.is_superuser:
-                return Post.objects.all().order_by('-created_at')
-            else:
-                return Post.objects.filter(approved=True).order_by('-created_at')
-        else:
-            return Post.objects.filter(public=True, approved=True).order_by('-created_at')
+            queryset = Post.objects.filter(approved=True)
+        if category_filter != 'all':
+            queryset = queryset.filter(category__name=category_filter)
+        return queryset.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        return context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -112,7 +117,6 @@ def post_comment(request, pk):
             messages.error(request, "There was an error submitting your comment. Please try again.")
     else:
         form = CommentForm()
-
     return render(request, 'post_detail.html', {'post': post, 'form': form})
 
 

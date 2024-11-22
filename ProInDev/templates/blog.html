@@ -9,8 +9,28 @@
         <div class="col-md-10 col-lg-8">
             <div class="text-center mb-5">
                 <h1 class="text-secondary text-center mb-3" style="font-size: 2.5rem;">Latest Posts</h1>
-                <img id="theme-specific-logo" class="img-fluid" style="width: 130px; height: auto;" 
+                <img id="theme-specific-logo" class="img-fluid" style="width: 130px; height: auto;"
                      src="{% static 'assets/images/logos_variations/small_logo_white.png' %}" alt="Top Logo">
+            </div>
+
+            <div class="mb-4 text-center">
+                <div class="d-flex justify-content-center flex-wrap gap-2">
+                    <a href="?category=all" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'all' or not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        All Posts
+                    </a>
+                    <a href="?category=Programming" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Programming' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        Programming
+                    </a>
+                    <a href="?category=Jobs" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Jobs' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        Jobs
+                    </a>
+                    <a href="?category=Tutorials" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Tutorials' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        Tutorials
+                    </a>
+                    <a href="?category=News" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'News' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        News
+                    </a>
+                </div>
             </div>
 
             {% if user.is_authenticated %}
@@ -110,6 +130,27 @@
     [data-bs-theme="dark"] .btn-outline-light:hover {
         background-color: #ffffff;
         color: #121212;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: white;
+    }
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
     }
 </style>
 {% endblock %}
