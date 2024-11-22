@@ -4,7 +4,25 @@ from django.utils import timezone
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    PROGRAMMING = 'Programming'
+    JOBS = 'Jobs'
+    TUTORIALS = 'Tutorials'
+    NEWS = 'News'
+    OTHER = 'Other'
+
+    CATEGORY_CHOICES = [
+        (PROGRAMMING, 'Programming'),
+        (JOBS, 'Jobs'),
+        (TUTORIALS, 'Tutorials'),
+        (NEWS, 'News'),
+        (OTHER, 'Other'),
+    ]
+
+    name = models.CharField(
+        max_length=100,
+        choices=CATEGORY_CHOICES,
+        unique=True
+    )
 
     def __str__(self):
         return self.name
@@ -20,7 +38,7 @@ class Post(models.Model):
     approved = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
     likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="posts")
+    categories = models.ManyToManyField(Category, related_name="posts", blank=True)
 
     def total_likes(self):
         return self.likes.count()

@@ -16,18 +16,16 @@ class PostListView(ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        category_filter = self.request.GET.get('category', 'all')
-        queryset = Post.objects.filter(approved=True, public=True)
-        if self.request.user.is_authenticated:
-            queryset = Post.objects.filter(approved=True)
-        if category_filter != 'all':
-            queryset = queryset.filter(category__name=category_filter)
-        return queryset.order_by('-created_at')
+        queryset = Post.objects.filter(approved=True)
+        category = self.request.GET.get('category', 'all')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        return context
+        if category != 'all':
+            queryset = queryset.filter(categories__name=category)
+
+        if not self.request.user.is_authenticated:
+            queryset = queryset.filter(public=True)
+
+        return queryset.order_by('-created_at')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -40,8 +38,8 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.approved = False
-        if not self.request.user.is_superuser:
-            form.instance.public = False
+        form.save()
+        form.instance.categories.set(form.cleaned_data['categories'])
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 

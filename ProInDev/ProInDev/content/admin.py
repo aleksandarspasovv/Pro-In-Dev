@@ -1,11 +1,24 @@
 from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, Comment, Category
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'approved']
-    list_filter = ['approved']
+    list_display = ['title', 'author', 'approved', 'get_categories', 'created_at']
+    list_filter = ['approved', 'categories', 'created_at']
+    search_fields = ['title', 'body', 'author__username']
     actions = ['approve_posts']
+
+    def get_categories(self, obj):
+        return ", ".join([category.name for category in obj.categories.all()])
+
+    get_categories.short_description = "Categories"
 
     def approve_posts(self, request, queryset):
         queryset.update(approved=True)

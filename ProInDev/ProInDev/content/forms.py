@@ -1,20 +1,20 @@
 from django import forms
-from .models import Post, Comment, Category
+from ProInDev.content.models import Post, Category, Comment
 
 
 class PostForm(forms.ModelForm):
-    public = forms.BooleanField(required=False, label="Make this post public (visible to everyone)")
+    categories = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',
+        }),
+        required=True,
+        label="Categories",
+    )
 
     class Meta:
         model = Post
-        fields = ['title', 'body', 'media', 'public', 'category']
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter post title'}),
-            'body': forms.Textarea(
-                attrs={'class': 'form-control', 'placeholder': 'Write your post content here', 'maxlength': '2000'}),
-            'media': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
-        }
+        fields = ['title', 'body', 'media', 'categories']
 
     def clean_body(self):
         body = self.cleaned_data.get('body')
