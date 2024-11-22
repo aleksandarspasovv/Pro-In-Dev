@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from ProInDev.content.forms import PostForm, CommentForm
 from ProInDev.content.models import Post, Comment
+
 
 class PostListView(ListView):
     model = Post
@@ -23,6 +24,7 @@ class PostListView(ListView):
         else:
             return Post.objects.filter(public=True, approved=True).order_by('-created_at')
 
+
 @method_decorator(login_required, name='dispatch')
 class PostCreateView(CreateView):
     model = Post
@@ -38,6 +40,7 @@ class PostCreateView(CreateView):
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post-details.html'
@@ -52,6 +55,7 @@ class PostDetailView(DetailView):
             context['comments'] = None
         return context
 
+
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
@@ -62,6 +66,7 @@ class PostUpdateView(UpdateView):
         messages.success(self.request, "Post updated successfully!")
         return super().form_valid(form)
 
+
 class PostDeleteView(DeleteView):
     model = Post
     template_name = 'confirm-delete.html'
@@ -71,6 +76,7 @@ class PostDeleteView(DeleteView):
         messages.success(request, "Post deleted successfully!")
         return super().delete(request, *args, **kwargs)
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def approve_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
@@ -79,6 +85,7 @@ def approve_post(request, pk):
     messages.success(request, "The post has been approved.")
     return redirect('content-list')
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def approve_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
@@ -86,6 +93,7 @@ def approve_comment(request, comment_id):
     comment.save()
     messages.success(request, "The comment has been approved.")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[comment.post.pk])))
+
 
 @login_required
 def post_comment(request, pk):
@@ -99,8 +107,14 @@ def post_comment(request, pk):
             comment.approved = False
             comment.save()
             messages.success(request, "Comment submitted and awaiting approval.")
-            return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
-    return HttpResponseRedirect(reverse('post-detail', args=[post.pk]))
+            return HttpResponseRedirect(reverse('content-list'))
+        else:
+            messages.error(request, "There was an error submitting your comment. Please try again.")
+    else:
+        form = CommentForm()
+
+    return render(request, 'post_detail.html', {'post': post, 'form': form})
+
 
 @login_required
 def like_post(request, pk):
@@ -110,6 +124,7 @@ def like_post(request, pk):
     else:
         post.likes.add(request.user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('post-detail', args=[pk])))
+
 
 @login_required
 def like_comment(request, comment_id):
