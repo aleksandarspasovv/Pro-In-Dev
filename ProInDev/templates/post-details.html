@@ -5,54 +5,76 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="col-lg-8 mx-auto">
-        <div class="card card-body shadow-sm mb-4">
-            <h1 class="mb-3">{{ post.title }}</h1>
-            <p>{{ post.body }}</p>
-            <small class="text-muted">Published on {{ post.created_at }}</small>
-        </div>
-
-        <div class="d-flex gap-3 mb-3">
-            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
-            </a>
-            <a href="#comment-section" class="btn btn-outline-secondary btn-sm d-flex align-items-center">
-                <i class="fas fa-comment me-1"></i> Comment
-            </a>
-        </div>
-
-        {% if user.is_authenticated and user.userprofile.role == 'admin' and not post.approved %}
-            <form action="{% url 'post-approve' post.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Approve Post</button>
-            </form>
-        {% endif %}
-
-        <div id="comment-section" class="mt-4">
-            <h4>Comments</h4>
-            {% for comment in comments %}
-                <div class="mb-3">
-                    <strong>{{ comment.author.username }}</strong> <small class="text-muted">{{ comment.created_at }}</small>
-                    <p>{{ comment.content }}</p>
-                    <a href="{% url 'like-comment' comment.id %}" class="text-secondary">
-                        <i class="fas fa-thumbs-up"></i> Like ({{ comment.total_likes }})
-                    </a>
-                    {% if user.is_authenticated and user.userprofile.role == 'admin' and not comment.approved %}
-                        <form action="{% url 'approve-comment' comment.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-success btn-sm">Approve Comment</button>
-                        </form>
-                    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow border-0 rounded-3 mb-4">
+                <div class="card-header bg-light rounded-top">
+                    <h1 class="mb-0 text-secondary text-start">{{ post.title }}</h1>
                 </div>
-            {% empty %}
-                <p class="text-muted">No comments yet. Be the first to comment!</p>
-            {% endfor %}
+                <div class="card-body p-4">
+                    <p>{{ post.body }}</p>
+                    <small class="text-muted">Published on {{ post.created_at }}</small>
+                </div>
+            </div>
 
-            <form action="{% url 'post-comment' post.pk %}" method="post" class="mt-4">
-                {% csrf_token %}
-                {{ comment_form.as_p }}
-                <button type="submit" class="btn btn-primary">Post Comment</button>
-            </form>
+            <div class="d-flex justify-content-start gap-3 mb-4">
+                <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center rounded-pill shadow-sm">
+                    <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
+                </a>
+                <a href="#comment-section" class="btn btn-outline-secondary btn-sm d-flex align-items-center rounded-pill shadow-sm">
+                    <i class="fas fa-comment me-1"></i> Comment
+                </a>
+            </div>
+
+            {% if user.is_authenticated and user.userprofile.role == 'admin' and not post.approved %}
+                <form action="{% url 'post-approve' post.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success rounded-pill shadow-sm">Approve Post</button>
+                </form>
+            {% endif %}
+
+            <div id="comment-section" class="mt-5">
+                <div class="card shadow border-0 rounded-3">
+                    <div class="card-header bg-light rounded-top">
+                        <h4 class="text-secondary text-start mb-0">Comments</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        {% for comment in comments %}
+                            <div class="mb-4">
+                                <strong>{{ comment.author.username }}</strong>
+                                <small class="text-muted">{{ comment.created_at }}</small>
+                                <p>{{ comment.content }}</p>
+                                <a href="{% url 'like-comment' comment.id %}" class="text-secondary">
+                                    <i class="fas fa-thumbs-up"></i> Like ({{ comment.total_likes }})
+                                </a>
+                                {% if user.is_authenticated and user.userprofile.role == 'admin' and not comment.approved %}
+                                    <form action="{% url 'approve-comment' comment.id %}" method="post" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success btn-sm rounded-pill shadow-sm">Approve Comment</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No comments yet. Be the first to comment!</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card shadow border-0 rounded-3 mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="text-secondary text-start">Add a Comment</h5>
+                        <form action="{% url 'post-comment' post.pk %}" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ comment_form.content }}
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary rounded-pill shadow-sm">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -35,7 +35,7 @@
                     <a href="{% url 'create-post' %}" class="btn btn-secondary" style="border: 2px solid white;">Create Post</a>
                 {% else %}
                     <div class="col-mb-4 or-section">
-                        <img id="theme-image" class="navbar-brand-item" src="{% static 'assets/images/logos_variations/custom_logo.svg' %}" alt="&" style="width: 100px; height: auto;">
+                        <img id="theme-image" class="navbar-brand-item" src="{% static 'assets/images/or_images/white.svg' %}" alt="&" style="width: 100px; height: auto;">
                     </div>
                 {% endif %}
             </div>
@@ -68,14 +68,14 @@
             body.classList.add('dark-mode');
             body.classList.remove('light-mode');
             if (themeImage) {
-                themeImage.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
+                themeImage.src = "{% static 'assets/images/or_images/white.png' %}";
             }
         } else {
             logo.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
             body.classList.add('light-mode');
             body.classList.remove('dark-mode');
             if (themeImage) {
-                themeImage.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
+                themeImage.src = "{% static 'assets/images/or_images/black.png' %}";
             }
         }
 

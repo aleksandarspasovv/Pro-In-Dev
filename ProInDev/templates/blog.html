@@ -4,61 +4,112 @@
 {% block title %}Latest Posts{% endblock %}
 
 {% block content %}
-<div class="container mt-3">
-    <div class="text-center mb-3">
-        <h1 class="d-flex align-items-center justify-content-center mb-1" style="margin-top: 0;">
-            Latest Posts
-        </h1>
-        <img src="https://res.cloudinary.com/drbh7hg4h/image/upload/v1731299222/file_fjf6ef.png" alt="Top Logo" style="width: 130px; height: auto;">
-    </div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="text-secondary text-center mb-3" style="font-size: 2.5rem;">Latest Posts</h1>
+                <img id="theme-specific-logo" class="img-fluid" style="width: 130px; height: auto;" 
+                     src="{% static 'assets/images/logos_variations/small_logo_white.png' %}" alt="Top Logo">
+            </div>
 
-    {% if user.is_authenticated %}
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
+            {% if user.is_authenticated %}
                 {% for post in user_posts %}
-                <div class="card card-body my-4 p-4 shadow-sm border-0">
-                    <h2 class="h5 mb-2">{{ post.title }}</h2>
-                    {% if post.media %}
-                        <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid mb-3 d-block mx-auto" style="width: 200px; height: auto;">
-                    {% endif %}
-                    <p class="mb-4">
-                        {{ post.body|linebreaksbr|truncatechars:2000 }}
-                    </p>
-                    <div class="d-flex gap-3 mb-3" style="font-size: 1rem;">
-                        <a href="{% url 'like-post' post.pk %}" class="d-flex align-items-center text-decoration-none">
-                            <i class="fas fa-thumbs-up"></i> Like ({{ post.total_likes }})
-                        </a>
-                        <a href="{% url 'post-detail' post.pk %}" class="d-flex align-items-center text-decoration-none">
-                            <i class="fas fa-comment"></i> Comment
-                        </a>
+                <div class="card shadow border-0 rounded-3 mb-4">
+                    <div class="card-header bg-light rounded-top px-3 py-2">
+                        <h2 class="text-secondary text-start mb-0" style="font-size: 1.625rem;">{{ post.title }}</h2>
                     </div>
-                    <small class="text-muted">Published on {{ post.created_at|date:"F j, Y" }}</small>
+                    <div class="card-body p-4">
+                        {% if post.media %}
+                        <div class="text-center mb-4">
+                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow" style="width: 100%; max-width: 300px; height: auto;">
+                        </div>
+                        {% endif %}
+                        <p style="font-size: 1.1rem;">{{ post.body|linebreaksbr|truncatechars:2000 }}</p>
+                        <div class="d-flex justify-content-start gap-2 mt-3">
+                            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
+                            </a>
+                            <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-comment me-1"></i> Comment
+                            </a>
+                        </div>
+                        <small class="text-muted d-block text-start mt-3" style="font-size: 0.6rem;">Published on {{ post.created_at|date:"F j, Y" }}</small>
+                    </div>
                 </div>
                 {% empty %}
                 <p class="text-center">No posts available at the moment.</p>
                 {% endfor %}
-            </div>
-        </div>
-    {% else %}
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
+            {% else %}
                 {% for post in user_posts %}
-                <div class="card card-body my-4 p-4 shadow-sm border-0">
-                    <h2 class="h5 mb-2">{{ post.title }}</h2>
-                    {% if post.media %}
-                        <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid mb-3 d-block mx-auto" style="width: 150px; height: auto;">
-                    {% endif %}
-                    <p class="mb-4">
-                        {{ post.body|linebreaksbr|truncatechars:2000 }}
-                    </p>
-                    <small class="text-muted">Published on {{ post.created_at|date:"F j, Y" }}</small>
+                <div class="card shadow border-0 rounded-3 mb-4">
+                    <div class="card-header bg-light rounded-top px-3 py-2">
+                        <h2 class="text-secondary text-start mb-0" style="font-size: 1.625rem;">{{ post.title }}</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if post.media %}
+                        <div class="text-center mb-4">
+                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow" style="width: 100%; max-width: 300px; height: auto;">
+                        </div>
+                        {% endif %}
+                        <p style="font-size: 1.1rem;">{{ post.body|linebreaksbr|truncatechars:2000 }}</p>
+                        <div class="d-flex justify-content-start gap-2 mt-3">
+                            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
+                            </a>
+                            <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-comment me-1"></i> Comment
+                            </a>
+                        </div>
+                        <small class="text-muted d-block text-start mt-3" style="font-size: 0.6rem;">Published on {{ post.created_at|date:"F j, Y" }}</small>
+                    </div>
                 </div>
                 {% empty %}
                 <p class="text-center">No posts available at the moment.</p>
                 {% endfor %}
-            </div>
+                <div class="alert alert-info text-center mt-4">
+                    Log in to see more posts and engage with the community!
+                </div>
+            {% endif %}
         </div>
-        <p class="alert alert-info text-center">Log in to see more posts and engage with the community!</p>
-    {% endif %}
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+        setLogoForTheme(currentTheme);
+
+        document.getElementById('theme-toggle-btn').addEventListener('click', function () {
+            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+            setLogoForTheme(newTheme);
+        });
+    });
+
+    function setLogoForTheme(theme) {
+        const logo = document.getElementById('theme-specific-logo');
+        if (theme === 'dark') {
+            logo.src = "{% static 'assets/images/logos_variations/small_logo_white.png' %}";
+        } else {
+            logo.src = "{% static 'assets/images/logos_variations/small_logo_black.png' %}";
+        }
+    }
+</script>
+
+<style>
+    .btn-xxs {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.3rem;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light {
+        border-color: #ffffff;
+        color: #ffffff;
+    }
+
+    [data-bs-theme="dark"] .btn-outline-light:hover {
+        background-color: #ffffff;
+        color: #121212;
+    }
+</style>
 {% endblock %}
