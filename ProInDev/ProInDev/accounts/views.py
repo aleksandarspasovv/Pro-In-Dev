@@ -1,4 +1,4 @@
-from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth import login, authenticate, update_session_auth_hash, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.views import View
@@ -84,13 +84,15 @@ def remove_account(request):
         user = request.user
 
         if authenticate(username=user.username, password=password):
-            user.delete()
-            messages.success(request, "Your account has been deleted.")
+            user.is_active = False
+            user.save()
+
+            messages.success(request, "Your account has been deactivated.")
+            logout(request)
             return redirect('index')
         else:
-            messages.error(request, "Password is incorrect. Account deletion failed.")
+            messages.error(request, "Password is incorrect. Account deactivation failed.")
             return redirect('profile_edit')
-    return redirect('profile_edit')
 
 
 @login_required

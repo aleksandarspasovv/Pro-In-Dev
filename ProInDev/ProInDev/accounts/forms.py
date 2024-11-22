@@ -1,7 +1,9 @@
 # accounts/forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 from ProInDev.accounts.models import UserProfile
 
 
@@ -31,3 +33,11 @@ class UserProfileForm(forms.ModelForm):
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
             self.fields['overview'].initial = user.userprofile.bio
+
+
+class CustomAuthenticationForm(AuthenticationForm):
+    def confirm_login_allowed(self, user):
+        if not user.is_active:
+            raise ValidationError(
+                "This account is inactive.", code='inactive_account'
+            )
