@@ -1,5 +1,5 @@
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, authenticate, update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
@@ -17,7 +17,7 @@ class RegisterView(View):
     def post(self, request):
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
             messages.success(request, "Registration successful. Please log in.")
             return redirect('login')
         messages.error(request, "Registration failed. Please correct the errors below.")
@@ -56,11 +56,54 @@ def profile_view(request):
 @login_required
 def profile_edit(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
-    form = UserProfileForm(instance=profile)
+    form = UserProfileForm(instance=profile, user=request.user)
+
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
+            user = request.user
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.save()
+
+            profile.bio = form.cleaned_data['overview']
             form.save()
-            messages.success(request, "Profile updated successfully.")
-            return redirect('profile')
+
+            messages.success(request, "Your profile was successfully updated.")
+            return redirect('profile_edit')
+
+        messages.error(request, "There was an error updating your profile.")
+
+    return render(request, 'settings.html', {'form': form})
+
+
+@login_required
+def remove_account(request):
+    if request.method == "POST":
+        password = request.POST.get('password')
+        user = request.user
+
+        if authenticate(username=user.username, password=password):
+            user.delete()
+            messages.success(request, "Your account has been deleted.")
+            return redirect('index')
+        else:
+            messages.error(request, "Password is incorrect. Account deletion failed.")
+            return redirect('profile_edit')
+    return redirect('profile_edit')
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password has been successfully updated.")
+            return redirect('profile_edit')
+        else:
+            messages.error(request, "There was an error changing your password. Please check the form and try again.")
+    else:
+        form = PasswordChangeForm(request.user)
     return render(request, 'settings.html', {'form': form})

@@ -1,13 +1,13 @@
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from .models import UserProfile
 
 
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.get_or_create(user=instance)
+class UserRegistrationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
 
-
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        return user

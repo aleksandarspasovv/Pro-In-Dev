@@ -4,7 +4,6 @@
 {% block content %}
 <div class="container my-5">
   <div class="row">
-    <!-- Sidenav START -->
     <div class="col-lg-3">
       <div class="card w-100">
         <div class="card-body">
@@ -31,12 +30,9 @@
         </div>
       </div>
     </div>
-    <!-- Sidenav END -->
 
-    <!-- Main content START -->
     <div class="col-lg-9 vstack gap-4">
       <div class="tab-content" id="settingsTabContent">
-        <!-- Account Settings Tab -->
         <div class="tab-pane fade show active" id="account-settings">
           <div class="card mb-4">
             <div class="card-header border-0 pb-0">
@@ -44,33 +40,26 @@
               <p class="mb-0">Manage your account details.</p>
             </div>
             <div class="card-body">
-              <form class="row g-3">
+              <form method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}" class="row g-3">
+                {% csrf_token %}
                 <div class="col-sm-6 col-lg-4">
-                  <label class="form-label">First name</label>
-                  <input type="text" class="form-control" value="Sam">
+                  <label class="form-label">First Name</label>
+                  <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
                 </div>
                 <div class="col-sm-6 col-lg-4">
-                  <label class="form-label">Last name</label>
-                  <input type="text" class="form-control" value="Lanson">
-                </div>
-                <div class="col-sm-6 col-lg-4">
-                  <label class="form-label">Username</label>
-                  <input type="text" class="form-control" value="@samlanson">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
                 </div>
                 <div class="col-sm-6 col-lg-4">
                   <label class="form-label">Email</label>
-                  <input type="email" class="form-control" value="sam@webestica.com">
-                </div>
-                <div class="col-sm-6 col-lg-4">
-                  <label class="form-label">Phone number</label>
-                  <input type="text" class="form-control" value="(678) 324-1251">
+                  <input type="email" class="form-control" value="{{ user.email }}" readonly>
                 </div>
                 <div class="col-12">
                   <label class="form-label">Overview</label>
-                  <textarea class="form-control" rows="3">Character limit: 300</textarea>
+                  <textarea name="bio" class="form-control" rows="3">{{ user.userprofile.bio }}</textarea>
                 </div>
                 <div class="col-12 text-end mt-4">
-                  <button type="submit" class="btn btn-primary mb-0">Save changes</button>
+                  <button type="submit" class="btn btn-primary mb-0">Save Changes</button>
                 </div>
               </form>
             </div>
@@ -82,31 +71,31 @@
               <p class="mb-0">Update your password for increased security.</p>
             </div>
             <div class="card-body">
-              <form class="row g-3">
+              <form method="post" action="{% url 'change_password' %}" class="row g-3">
+                {% csrf_token %}
                 <div class="col-12">
                   <label class="form-label">Current password</label>
-                  <input type="password" class="form-control" placeholder="Enter current password">
+                  <input type="password" name="old_password" class="form-control" placeholder="Enter current password">
                 </div>
                 <div class="col-12">
                   <label class="form-label">New password</label>
                   <div class="input-group">
-                    <input class="form-control" type="password" placeholder="Enter new password">
+                    <input name="new_password1" class="form-control" type="password" placeholder="Enter new password">
                     <button class="btn btn-outline-secondary" type="button">Show</button>
                   </div>
                 </div>
                 <div class="col-12">
                   <label class="form-label">Confirm password</label>
-                  <input type="password" class="form-control" placeholder="Confirm new password">
+                  <input name="new_password2" type="password" class="form-control" placeholder="Confirm new password">
                 </div>
                 <div class="col-12 text-end mt-4">
-                  <button type="submit" class="btn btn-primary mb-0">Update password</button>
+                  <button type="submit" class="btn btn-primary mb-0">Update Password</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
 
-        <!-- Remove Account Tab -->
         <div class="tab-pane fade" id="nav-remove-account">
           <div class="card">
             <div class="card-header border-0 pb-0">
@@ -114,10 +103,11 @@
               <p class="mb-0">Permanently delete your account and all associated data.</p>
             </div>
             <div class="card-body">
-              <form class="row g-3">
+              <form method="post" action="{% url 'remove_account' %}" class="row g-3">
+                {% csrf_token %}
                 <div class="col-12">
                   <label class="form-label">Please type your password to confirm</label>
-                  <input type="password" class="form-control" placeholder="Enter your password">
+                  <input type="password" name="password" class="form-control" placeholder="Enter your password">
                 </div>
                 <div class="col-12 text-end mt-4">
                   <button type="submit" class="btn btn-danger mb-0">Delete Account</button>
@@ -128,7 +118,6 @@
         </div>
       </div>
     </div>
-    <!-- Main content END -->
   </div>
 </div>
 {% endblock %}
