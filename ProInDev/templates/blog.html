@@ -15,19 +15,19 @@
 
             <div class="mb-4 text-center">
                 <div class="d-flex justify-content-center flex-wrap gap-2">
-                    <a href="?category=all" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'all' or not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <a href="?category=all" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'all' or not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %}">
                         All Posts
                     </a>
-                    <a href="?category=Programming" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Programming' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <a href="?category=Programming" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Programming' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                         Programming
                     </a>
-                    <a href="?category=Jobs" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Jobs' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <a href="?category=Jobs" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Jobs' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                         Jobs
                     </a>
-                    <a href="?category=Tutorials" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'Tutorials' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <a href="?category=Tutorials" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Tutorials' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                         Tutorials
                     </a>
-                    <a href="?category=News" class="btn rounded-pill shadow-sm py-2 px-4 {% if request.GET.category == 'News' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    <a href="?category=News" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'News' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                         News
                     </a>
                 </div>
@@ -118,8 +118,8 @@
 
 <style>
     .btn-xxs {
-        font-size: 0.005rem;
-        padding: 0.0001rem 0.5rem;
+        font-size: 0.7rem;
+        padding: 0.15rem 0.3rem;
     }
 
     [data-bs-theme="dark"] .btn-outline-light {
@@ -132,9 +132,9 @@
         color: #121212;
     }
 
-    .btn {
-        font-size: 0.7rem;
-        font-weight: 500;
+    .btn-lg-category {
+        font-size: 0.9rem;
+        padding: 0.4rem 1.2rem;
     }
 
     .btn-primary {
