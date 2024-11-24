@@ -5,152 +5,135 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="text-center mb-5">
-                <h1 class="text-secondary text-center mb-3" style="font-size: 2.5rem;">Latest Posts</h1>
-                <img id="theme-specific-logo" class="img-fluid" style="width: 130px; height: auto;"
-                     src="{% static 'assets/images/logos_variations/small_logo_white.png' %}" alt="Top Logo">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <h1 class="h4 mb-4">Latest Posts</h1>
+            {% for post in user_posts %}
+            <div class="card shadow border-0 rounded-3 mb-4">
+                <div class="card-body p-4 position-relative">
+                    <small class="text-muted position-absolute top-0 end-0 mt-2 me-2">
+                        <i class="bi bi-calendar-date pe-1"></i>{{ post.created_at|date:"F j, Y" }}
+                    </small>
+                    <h5 class="mt-2">
+                        <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
+                    </h5>
+                    <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>
+                    {% if post.media %}
+                    <div class="mb-3 text-center">
+                        <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}">
+                    </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-start gap-2">
+                        <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                            <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
+                        </a>
+                        <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                            <i class="fas fa-comment me-1"></i> Comment
+                        </a>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 position-absolute bottom-0 end-0 mb-2 me-2">
+                        {% for category in post.categories.all %}
+                        <span class="badge bg-primary text-light fw-bold rounded-pill px-2 py-1" style="font-size: 0.65rem;">
+                            {{ category.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
+            {% empty %}
+            <p>No posts available at the moment.</p>
+            {% endfor %}
+        </div>
 
-            <div class="mb-4 text-center">
-                <div class="d-flex justify-content-center flex-wrap gap-2">
-                    <a href="?category=all" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'all' or not request.GET.category %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        All Posts
-                    </a>
-                    <a href="?category=Programming" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Programming' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        Programming
-                    </a>
-                    <a href="?category=Jobs" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Jobs' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        Jobs
-                    </a>
-                    <a href="?category=Tutorials" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'Tutorials' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        Tutorials
-                    </a>
-                    <a href="?category=News" class="btn btn-lg-category rounded-pill shadow-sm {% if request.GET.category == 'News' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        News
-                    </a>
+        <div class="col-lg-4">
+            <div class="row g-4">
+                <div class="col-sm-6 col-lg-12">
+                    <div class="card">
+                        <div class="card-header pb-0 border-0">
+                            <h5 class="card-title mb-0">Categories</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-inline mb-0 d-flex flex-wrap gap-2">
+                                <li class="list-inline-item m-0">
+                                    <a href="?category=all" class="btn btn-outline-primary btn-sm {% if request.GET.category == 'all' or not request.GET.category %}active{% endif %}">
+                                        All Posts
+                                    </a>
+                                </li>
+                                {% for category in categories %}
+                                <li class="list-inline-item m-0">
+                                    <a href="?category={{ category.name }}" class="btn btn-outline-primary btn-sm {% if request.GET.category == category.name %}active{% endif %}">
+                                        {{ category.name }}
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-12">
+                    <div class="card">
+                        <div class="card-header pb-0 border-0">
+                            <h5 class="card-title mb-0">Important Posts</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                {% for post in important_posts %}
+                                <li class="mb-3">
+                                    <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none">
+                                        <div class="d-flex align-items-center">
+                                            {% if post.media %}
+                                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            {% endif %}
+                                            <span class="text-secondary">{{ post.title }}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% empty %}
+                                <p class="text-muted">No important posts available.</p>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {% if user.is_authenticated %}
-                {% for post in user_posts %}
-                <div class="card shadow border-0 rounded-3 mb-4">
-                    <div class="card-header bg-light rounded-top px-3 py-2">
-                        <h2 class="text-secondary text-start mb-0" style="font-size: 1.625rem;">{{ post.title }}</h2>
-                    </div>
-                    <div class="card-body p-4">
-                        {% if post.media %}
-                        <div class="text-center mb-4">
-                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow" style="width: 100%; max-width: 300px; height: auto;">
-                        </div>
-                        {% endif %}
-                        <p style="font-size: 1.1rem;">{{ post.body|linebreaksbr|truncatechars:2000 }}</p>
-                        <div class="d-flex justify-content-start gap-2 mt-3">
-                            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
-                            </a>
-                            <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                                <i class="fas fa-comment me-1"></i> Comment
-                            </a>
-                        </div>
-                        <small class="text-muted d-block text-start mt-3" style="font-size: 0.6rem;">Published on {{ post.created_at|date:"F j, Y" }}</small>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-center">No posts available at the moment.</p>
-                {% endfor %}
-            {% else %}
-                {% for post in user_posts %}
-                <div class="card shadow border-0 rounded-3 mb-4">
-                    <div class="card-header bg-light rounded-top px-3 py-2">
-                        <h2 class="text-secondary text-start mb-0" style="font-size: 1.625rem;">{{ post.title }}</h2>
-                    </div>
-                    <div class="card-body p-4">
-                        {% if post.media %}
-                        <div class="text-center mb-4">
-                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow" style="width: 100%; max-width: 300px; height: auto;">
-                        </div>
-                        {% endif %}
-                        <p style="font-size: 1.1rem;">{{ post.body|linebreaksbr|truncatechars:2000 }}</p>
-                        <div class="d-flex justify-content-start gap-2 mt-3">
-                            <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                                <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
-                            </a>
-                            <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                                <i class="fas fa-comment me-1"></i> Comment
-                            </a>
-                        </div>
-                        <small class="text-muted d-block text-start mt-3" style="font-size: 0.6rem;">Published on {{ post.created_at|date:"F j, Y" }}</small>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-center">No posts available at the moment.</p>
-                {% endfor %}
-                <div class="alert alert-info text-center mt-4">
-                    Log in to see more posts and engage with the community!
-                </div>
-            {% endif %}
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentTheme = document.documentElement.getAttribute('data-bs-theme');
-        setLogoForTheme(currentTheme);
-
-        document.getElementById('theme-toggle-btn').addEventListener('click', function () {
-            const newTheme = document.documentElement.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
-            setLogoForTheme(newTheme);
-        });
-    });
-
-    function setLogoForTheme(theme) {
-        const logo = document.getElementById('theme-specific-logo');
-        if (theme === 'dark') {
-            logo.src = "{% static 'assets/images/logos_variations/small_logo_white.png' %}";
-        } else {
-            logo.src = "{% static 'assets/images/logos_variations/small_logo_black.png' %}";
-        }
-    }
-</script>
 
 <style>
     .btn-xxs {
         font-size: 0.7rem;
         padding: 0.15rem 0.3rem;
     }
-
-    [data-bs-theme="dark"] .btn-outline-light {
-        border-color: #ffffff;
-        color: #ffffff;
-    }
-
-    [data-bs-theme="dark"] .btn-outline-light:hover {
-        background-color: #ffffff;
-        color: #121212;
-    }
-
     .btn-lg-category {
         font-size: 0.9rem;
         padding: 0.4rem 1.2rem;
     }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: white;
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.4rem;
     }
-
-    .btn-outline-primary {
-        border-color: #007bff;
-        color: #007bff;
+    .badge.bg-primary {
+        background-color: #0d6efd;
+        color: #fff;
     }
-
-    .btn-outline-primary:hover {
-        background-color: #007bff;
-        color: white;
+    .card {
+        margin-top: 1.5rem;
+    }
+    .card-body {
+        position: relative;
+    }
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+    @media (max-width: 767px) {
+        .col-lg-4 {
+            order: 2;
+        }
+        .col-lg-8 {
+            order: 1;
+        }
     }
 </style>
 {% endblock %}
