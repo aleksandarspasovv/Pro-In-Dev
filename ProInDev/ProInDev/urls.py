@@ -1,4 +1,3 @@
-# main urls.py
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
@@ -18,8 +17,6 @@ urlpatterns = [
     path('posts/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('accounts/', include('ProInDev.accounts.urls')),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
-
-    # Password reset views
     path('accounts/password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
     path('accounts/password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
@@ -29,8 +26,8 @@ urlpatterns = [
     path('accounts/password_change_done/',
          auth_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html'),
          name='password_change_done'),
+    path('messages/', include('ProInDev.messages_app.urls')),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
