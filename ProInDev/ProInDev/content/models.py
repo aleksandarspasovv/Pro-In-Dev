@@ -4,18 +4,12 @@ from django.utils import timezone
 
 
 class Category(models.Model):
-    PROGRAMMING = 'Programming'
-    JOBS = 'Jobs'
-    TUTORIALS = 'Tutorials'
-    NEWS = 'News'
-    OTHER = 'Other'
-
     CATEGORY_CHOICES = [
-        (PROGRAMMING, 'Programming'),
-        (JOBS, 'Jobs'),
-        (TUTORIALS, 'Tutorials'),
-        (NEWS, 'News'),
-        (OTHER, 'Other'),
+        ('Programming', 'Programming'),
+        ('Jobs', 'Jobs'),
+        ('Tutorials', 'Tutorials'),
+        ('News', 'News'),
+        ('Other', 'Other'),
     ]
 
     name = models.CharField(
@@ -31,14 +25,30 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
-    media = models.ImageField(upload_to='media/', blank=True, null=True)
+    media = models.ImageField(
+        upload_to='media/',
+        blank=True,
+        null=True
+    )
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
+    author = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name="posts"
+    )
     approved = models.BooleanField(default=False)
     public = models.BooleanField(default=False)
-    likes = models.ManyToManyField(User, related_name="liked_posts", blank=True)
-    categories = models.ManyToManyField(Category, related_name="posts", blank=True)
+    likes = models.ManyToManyField(
+        User,
+        related_name="liked_posts",
+        blank=True
+    )
+    categories = models.ManyToManyField(
+        Category,
+        related_name="posts",
+        blank=True
+    )
 
     def total_likes(self):
         return self.likes.count()
@@ -48,12 +58,23 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    post = models.ForeignKey(
+        Post,
+        related_name="comments",
+        on_delete=models.CASCADE)
+
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
-    likes = models.ManyToManyField(User, related_name="liked_comments", blank=True)
+    likes = models.ManyToManyField(
+        User,
+        related_name="liked_comments",
+        blank=True)
 
     def total_likes(self):
         return self.likes.count()
