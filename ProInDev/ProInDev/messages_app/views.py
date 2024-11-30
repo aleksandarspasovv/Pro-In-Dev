@@ -1,8 +1,10 @@
 from django.db.models import Max, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ProInDev.messages_app.models import Message
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 @login_required
@@ -11,13 +13,21 @@ def messaging_view(request):
     messages = None
 
     latest_messages = (
-        Message.objects.filter(receiver=request.user)
-        .values('sender')
+        Message.objects.filter(Q(sender=request.user) | Q(receiver=request.user))
         .annotate(latest_id=Max('id'))
+        .order_by('-timestamp')
     )
 
-    latest_message_ids = [item['latest_id'] for item in latest_messages]
-    latest_messages = Message.objects.filter(id__in=latest_message_ids).order_by('-timestamp')
+    chat_partners = {}
+    for message in latest_messages:
+        if message.sender == request.user:
+            partner = message.receiver
+        else:
+            partner = message.sender
+        if partner not in chat_partners or chat_partners[partner].timestamp < message.timestamp:
+            chat_partners[partner] = message
+
+    latest_messages = sorted(chat_partners.values(), key=lambda x: x.timestamp, reverse=True)
 
     if 'chat' in request.GET:
         chat_user_id = request.GET.get('chat')
@@ -30,13 +40,10 @@ def messaging_view(request):
         except User.DoesNotExist:
             chat_user = None
 
-    users = User.objects.exclude(id=request.user.id)
-
     return render(request, 'messaging.html', {
         'chat_user': chat_user,
         'messages': messages,
         'latest_messages': latest_messages,
-        'users': users,
     })
 
 
@@ -55,12 +62,16 @@ def messaging_view(request):
 #     return redirect('messages_app:messaging')
 
 
-@login_required
-def send_message_view(request, user_id=None):
-    if request.method == 'POST':
-        receiver_id = user_id or request.POST.get('receiver')  # Fallback to POST data if user_id is not provided
-        receiver = get_object_or_404(User, id=receiver_id)
-        content = request.POST.get('content')
+def send_message_view(request, user_id):
+    if request.method == "POST":
+        receiver = get_object_or_404(User, id=user_id)
+        content = request.POST.get('content', '').strip()
         if content:
             Message.objects.create(sender=request.user, receiver=receiver, content=content)
-        return redirect(f'/messages/?chat={receiver.id}')
+            messages.success(request, "Message sent successfully.")
+        else:
+            messages.error(request, "Message cannot be empty.")
+        return redirect("messages_app:messaging")
+
+    receiver = get_object_or_404(User, id=user_id)
+    return HttpResponseRedirect(f"/messages/?chat={receiver.id}")
