@@ -1,5 +1,5 @@
 from django.db.models import Max, Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from ProInDev.messages_app.models import Message
 from django.contrib.auth.models import User
@@ -40,16 +40,27 @@ def messaging_view(request):
     })
 
 
+# @login_required
+# def send_message_view(request):
+#     if request.method == 'POST':
+#         receiver_id = request.POST.get('receiver')
+#         content = request.POST.get('content')
+#
+#         try:
+#             receiver = User.objects.get(id=receiver_id)
+#             Message.objects.create(sender=request.user, receiver=receiver, content=content)
+#         except User.DoesNotExist:
+#             pass
+#
+#     return redirect('messages_app:messaging')
+
+
 @login_required
-def send_message_view(request):
+def send_message_view(request, user_id=None):
     if request.method == 'POST':
-        receiver_id = request.POST.get('receiver')
+        receiver_id = user_id or request.POST.get('receiver')  # Fallback to POST data if user_id is not provided
+        receiver = get_object_or_404(User, id=receiver_id)
         content = request.POST.get('content')
-
-        try:
-            receiver = User.objects.get(id=receiver_id)
+        if content:
             Message.objects.create(sender=request.user, receiver=receiver, content=content)
-        except User.DoesNotExist:
-            pass
-
-    return redirect('messages_app:messaging')
+        return redirect(f'/messages/?chat={receiver.id}')

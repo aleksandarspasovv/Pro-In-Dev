@@ -55,7 +55,6 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post-details.html'

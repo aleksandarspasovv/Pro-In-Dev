@@ -6,42 +6,49 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow border-0 rounded-3 mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">{% if chat_user %}Chat with {{ chat_user.username }}{% else %}Inbox{% endif %}</h5>
+    <div class="row g-4">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">{% if chat_user %}Chat with {{ chat_user.username }}{% else %}Inbox{% endif %}</h4>
                 </div>
-                <div class="card-body p-4">
+                <div class="card-body">
                     {% if chat_user %}
                     <div class="border p-3 rounded mb-3" style="max-height: 400px; overflow-y: auto;">
                         {% for message in messages %}
                         <div class="{% if message.sender == request.user %}text-end{% else %}text-start{% endif %}">
-                            <p class="mb-1 {% if message.sender == request.user %}bg-primary text-white{% else %}bg-light{% endif %} rounded px-3 py-2 d-inline-block">
+                            <p class="mb-1 {% if message.sender == request.user %}bg-primary text-white{% else %}bg-light{% endif %} rounded px-3 py-2 d-inline-block shadow-sm">
                                 {{ message.content }}
                             </p>
-                            <small class="text-muted d-block">{{ message.timestamp }}</small>
+                            <small class="text-muted d-block">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
                         </div>
                         {% endfor %}
                     </div>
-                    <form method="POST" action="{% url 'messages_app:send_message' %}">
+                    <form method="POST" action="{% url 'messages_app:message-user' chat_user.id %}">
                         {% csrf_token %}
-                        <input type="hidden" name="receiver" value="{{ chat_user.id }}">
                         <div class="mb-3">
-                            <textarea name="content" class="form-control" rows="2" placeholder="Type a message"></textarea>
+                            <textarea name="content" class="form-control rounded-3 shadow-sm" rows="3" placeholder="Type a message" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Send</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary rounded-pill shadow">Send</button>
+                        </div>
                     </form>
                     {% else %}
                     <ul class="list-group">
                         {% for message in latest_messages %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{{ message.sender.username }}</strong>
+                                <strong>
+                                    {% if message.sender == request.user %}
+                                        {{ message.receiver.username }}
+                                    {% else %}
+                                        {{ message.sender.username }}
+                                    {% endif %}
+                                </strong>
                                 <p class="mb-1">{{ message.content|truncatewords:10 }}</p>
                             </div>
                             <div>
-                                <a href="?chat={{ message.sender.id }}" class="btn btn-primary btn-sm">View Chat</a>
+                                <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}" class="btn btn-primary btn-sm">View Chat</a>
                             </div>
                         </li>
                         {% endfor %}
@@ -50,29 +57,63 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card shadow border-0 rounded-3 mb-4">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">New Message</h5>
-                </div>
-                <div class="card-body p-4">
-                    <form method="POST" action="{% url 'messages_app:send_message' %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <select name="receiver" class="form-select">
-                                {% for user in users %}
-                                <option value="{{ user.id }}">{{ user.username }}</option>
+        <div class="col-lg-4 col-md-2">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Chats</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for message in latest_messages %}
+                                <li class="list-group-item">
+                                    <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}">
+                                        {% if message.sender == request.user %}
+                                            {{ message.receiver.username }}
+                                        {% else %}
+                                            {{ message.sender.username }}
+                                        {% endif %}
+                                    </a>
+                                </li>
                                 {% endfor %}
-                            </select>
+                            </ul>
                         </div>
-                        <div class="mb-3">
-                            <textarea name="content" class="form-control" rows="3" placeholder="Type a message"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Send</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .card {
+        margin-top: 1.5rem;
+    }
+    .card-header {
+        padding: 0.75rem 1rem;
+    }
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+    .form-control {
+        border-radius: 0.3rem;
+    }
+    .btn {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+    .list-group-item {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+    .list-group-item a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .list-group-item a:hover {
+        text-decoration: underline;
+    }
+</style>
 {% endblock %}

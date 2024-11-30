@@ -1,6 +1,7 @@
 from django.contrib.auth import login, authenticate, update_session_auth_hash, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.utils.decorators import method_decorator
@@ -109,3 +110,8 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'settings.html', {'form': form})
+
+
+def profile_view_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    return render(request, 'profile.html', {'user': user})

@@ -1,65 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}My Profile{% endblock %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
 <div class="container my-5">
     <div class="row">
-
         <div class="col-12">
             <div class="card">
-
                 <div class="h-200px rounded-top" style="background-image: url({{ user.userprofile.cover_image.url|default:'' }}); background-position: center; background-size: cover; background-repeat: no-repeat;">
                 </div>
-
-
                 <div class="card-body py-0">
                     <div class="d-sm-flex align-items-start text-center text-sm-start">
                         <div>
-
                             <div class="avatar avatar-xxl mt-n5 mb-3">
                                 {% if user.userprofile.profile_image %}
-                                    <img class="avatar-img rounded-circle border border-white border-3"
-                                         src="{{ user.userprofile.profile_image.url }}"
+                                    <img class="avatar-img rounded-circle border border-white border-3" 
+                                         src="{{ user.userprofile.profile_image.url }}" 
                                          alt="User Avatar">
                                 {% else %}
-                                    <img class="avatar-img rounded-circle border border-white border-3"
-                                         src="{% static 'assets/images/avatar/placeholder.jpg' %}"
+                                    <img class="avatar-img rounded-circle border border-white border-3" 
+                                         src="{% static 'assets/images/avatar/placeholder.jpg' %}" 
                                          alt="User Avatar">
                                 {% endif %}
                             </div>
                         </div>
-
                         <div class="ms-sm-4 mt-sm-3">
-
                             <h1 class="mb-0 h5">{{ user.username }} <i class="bi bi-patch-check-fill text-success small"></i></h1>
-{#                            <p>{{ user.userprofile.connections }} connections</p>#}
                         </div>
-
-
                         <div class="d-flex mt-3 justify-content-center ms-sm-auto">
-                            <a href="{% url 'profile_edit' %}" class="btn btn-danger-soft me-2"> <i class="bi bi-pencil-fill pe-1"></i> Edit profile </a>
+                            {% if user == request.user %}
+                                <a href="{% url 'profile_edit' %}" class="btn btn-danger-soft me-2"> 
+                                    <i class="bi bi-pencil-fill pe-1"></i> Edit Profile 
+                                </a>
+                            {% else %}
+                                <a href="{% url 'messages_app:message-user' user.id %}" class="btn btn-primary-soft me-2"> 
+                                    <i class="bi bi-envelope-fill pe-1"></i> Message 
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
-
-
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
-{#                        <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> {{ user.userprofile.job_title|default:"Not provided" }}</li>#}
-{#                        <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> {{ user.userprofile.location|default:"Location not set" }}</li>#}
                         <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on {{ user.date_joined|date:"F j, Y" }}</li>
                     </ul>
                 </div>
-
             </div>
-        </div>
-
-
-        <div class="col-lg-3 mt-4">
-
-        </div>
-        <div class="col-lg-9 mt-4">
-
         </div>
     </div>
 </div>

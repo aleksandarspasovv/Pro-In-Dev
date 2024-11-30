@@ -13,7 +13,12 @@
                 </div>
                 <div class="card-body p-4">
                     <p>{{ post.body }}</p>
-                    <small class="text-muted">Published on {{ post.created_at|date:"F j, Y, g:i a" }}</small>
+                    <small class="text-muted">
+                        Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
+                        <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline">
+                            {{ post.author.username }}
+                        </a>
+                    </small>
                     {% if post.media %}
                         <img src="{{ post.media.url }}" class="img-fluid mt-3 rounded shadow-sm" alt="Post Image">
                     {% endif %}
@@ -24,7 +29,6 @@
                 <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                     <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
                 </a>
-            
                 {% if user.is_authenticated and user == post.author %}
                     <a href="{% url 'post-edit' post.pk %}" class="btn btn-outline-warning btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                         <i class="fas fa-edit me-1"></i> Edit
@@ -87,34 +91,3 @@
     </div>
 </div>
 {% endblock %}
-
-<style>
-    .btn-xxs {
-        font-size: 0.7rem;
-        padding: 0.15rem 0.3rem;
-    }
-    .card {
-        margin-top: 1.5rem;
-    }
-    .badge {
-        font-size: 0.65rem;
-        padding: 0.3rem 0.4rem;
-    }
-    .border-bottom {
-        border-bottom: 2px solid #ddd;
-    }
-    .card-body {
-        position: relative;
-    }
-    .card-header {
-        padding: 0.75rem 1rem;
-    }
-    .btn-outline-light {
-        color: #fff;
-        border-color: #fff;
-    }
-    .btn-outline-light:hover {
-        background-color: #fff;
-        color: #333;
-    }
-</style>
