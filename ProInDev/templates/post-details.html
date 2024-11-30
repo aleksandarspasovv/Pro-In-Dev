@@ -5,89 +5,132 @@
 
 {% block content %}
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="card shadow border-0 rounded-3 mb-4">
-                <div class="card-header bg-light rounded-top">
-                    <h1 class="mb-0 text-secondary text-start">{{ post.title }}</h1>
+    <div class="row g-4">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">{{ post.title }}</h4>
                 </div>
-                <div class="card-body p-4">
-                    <p>{{ post.body }}</p>
-                    <small class="text-muted">
-                        Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
-                        <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline">
-                            {{ post.author.username }}
-                        </a>
-                    </small>
+                <div class="card-body">
+                    <p class="mb-4">{{ post.body }}</p>
+                    <div class="mb-4">
+                        <small class="text-muted">
+                            Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
+                            <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline">
+                                {{ post.author.username }}
+                            </a>
+                        </small>
+                    </div>
                     {% if post.media %}
-                        <img src="{{ post.media.url }}" class="img-fluid mt-3 rounded shadow-sm" alt="Post Image">
+                        <div class="mb-4">
+                            <img src="{{ post.media.url }}" class="img-fluid rounded shadow-sm" alt="Post Image">
+                        </div>
+                    {% endif %}
+                    <div class="d-flex justify-content-start gap-2 mb-4">
+                        <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                            <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
+                        </a>
+                        {% if user.is_authenticated and user == post.author %}
+                            <a href="{% url 'post-edit' post.pk %}" class="btn btn-outline-warning btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-edit me-1"></i> Edit
+                            </a>
+                            <a href="{% url 'post-delete' post.pk %}" class="btn btn-outline-danger btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <i class="fas fa-trash-alt me-1"></i> Delete
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% if user.is_authenticated and user.is_superuser and not post.approved %}
+                        <form action="{% url 'post-approve' post.pk %}" method="post" class="mt-4">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success rounded-pill shadow-sm">Approve Post</button>
+                        </form>
                     {% endif %}
                 </div>
             </div>
-
-            <div class="d-flex justify-content-start gap-2 mb-4">
-                <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                    <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
-                </a>
-                {% if user.is_authenticated and user == post.author %}
-                    <a href="{% url 'post-edit' post.pk %}" class="btn btn-outline-warning btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                        <i class="fas fa-edit me-1"></i> Edit
-                    </a>
-                    <a href="{% url 'post-delete' post.pk %}" class="btn btn-outline-danger btn-xxs rounded-pill shadow-sm d-flex align-items-center">
-                        <i class="fas fa-trash-alt me-1"></i> Delete
-                    </a>
+        </div>
+        <div class="col-lg-4 col-md-2">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Comments</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if comments %}
+                                {% for comment in comments %}
+                                    <div class="mb-4">
+                                        <strong>{{ comment.author.username }}</strong>
+                                        <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                                        <p class="mb-2">{{ comment.content }}</p>
+                                        <a href="{% url 'like-comment' comment.id %}" class="text-primary">
+                                            <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
+                                        </a>
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted">No comments yet. Be the first to comment!</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Leave a Comment</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="{% url 'post-comment' post.pk %}" method="post">
+                                {% csrf_token %}
+                                {{ comment_form.as_p }}
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary rounded-pill shadow-sm">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <p class="text-muted">Please <a href="{% url 'login' %}">log in</a> to leave a comment.</p>
+                </div>
                 {% endif %}
             </div>
-
-            {% if user.is_authenticated and user.is_superuser and not post.approved %}
-                <form action="{% url 'post-approve' post.pk %}" method="post" class="mb-4">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-success rounded-pill shadow-sm">Approve Post</button>
-                </form>
-            {% endif %}
-
-            <div id="comment-section" class="mt-5">
-                <div class="card shadow border-0 rounded-3">
-                    <div class="card-header bg-light rounded-top">
-                        <h4 class="text-secondary text-start mb-0">Comments</h4>
-                    </div>
-                    <div class="card-body p-4">
-                        {% if comments %}
-                            {% for comment in comments %}
-                                <div class="mb-4">
-                                    <strong>{{ comment.author.username }}</strong>
-                                    <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
-                                    <p>{{ comment.content }}</p>
-                                    <a href="{% url 'like-comment' comment.id %}" class="text-secondary">
-                                        <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
-                                    </a>
-                                </div>
-                                <hr>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted">No comments yet. Be the first to comment!</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-
-            {% if user.is_authenticated %}
-                <div class="card shadow border-0 rounded-3 mt-4">
-                    <div class="card-header bg-light rounded-top">
-                        <h5 class="text-secondary text-start mb-0">Leave a Comment</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <form action="{% url 'post-comment' post.pk %}" method="post">
-                            {% csrf_token %}
-                            {{ comment_form.as_p }}
-                            <button type="submit" class="btn btn-primary rounded-pill shadow-sm">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            {% else %}
-                <p class="text-muted mt-4">Please <a href="{% url 'login' %}">log in</a> to leave a comment.</p>
-            {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+    .btn-xxs {
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+    }
+    .btn-outline-light {
+        color: #f8f9fa;
+        background-color: transparent;
+        border: 1px solid #f8f9fa;
+    }
+    .btn-outline-light:hover {
+        color: #343a40;
+        background-color: #f8f9fa;
+    }
+    .btn-outline-warning {
+        color: #ffc107;
+        border-color: #ffc107;
+    }
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: #212529;
+    }
+    .btn-outline-danger {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+</style>
 {% endblock %}
