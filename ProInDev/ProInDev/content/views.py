@@ -65,6 +65,9 @@ class PostDetailView(DetailView):
         if self.request.user.is_authenticated:
             context['comment_form'] = CommentForm()
             context['comments'] = self.object.comments.filter(approved=True).order_by('-created_at')
+
+            if self.request.user == self.object.author:
+                context['edit_form'] = PostForm(instance=self.object)
         else:
             context['comments'] = None
         return context
@@ -147,3 +150,26 @@ def like_comment(request, comment_id):
     else:
         comment.likes.add(request.user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def post_edit_inline(request, pk):
+    post = get_object_or_404(Post, pk=pk, author=request.user)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post updated successfully!")
+        else:
+            messages.error(request, "Error updating the post.")
+    return redirect('post-detail', pk=pk)
+
+
+@login_required
+def post_delete_inline(request, pk):
+    post = get_object_or_404(Post, pk=pk, author=request.user)
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, "Post deleted successfully!")
+        return redirect('content-list')
+    return redirect('post-detail', pk=pk)

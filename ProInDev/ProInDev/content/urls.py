@@ -1,5 +1,6 @@
 from django.urls import path
-from ProInDev.content.views import PostListView, PostCreateView, PostDetailView, PostUpdateView, PostDeleteView, approve_post, post_comment, like_post, like_comment, approve_comment
+from ProInDev.content.views import PostListView, PostCreateView, PostDetailView, PostUpdateView, PostDeleteView, \
+    approve_post, post_comment, like_post, like_comment, approve_comment, post_edit_inline, post_delete_inline
 
 urlpatterns = [
     path('', PostListView.as_view(), name='content-list'),
@@ -12,4 +13,6 @@ urlpatterns = [
     path('comment/<int:comment_id>/like/', like_comment, name='like-comment'),
     path('<int:pk>/comment/', post_comment, name='post-comment'),
     path('comment/<int:comment_id>/approve/', approve_comment, name='approve-comment'),
+    path('<int:pk>/edit-inline/', post_edit_inline, name='post-edit-inline'),
+    path('<int:pk>/delete-inline/', post_delete_inline, name='post-delete-inline'),
 ]
