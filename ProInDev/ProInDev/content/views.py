@@ -54,6 +54,9 @@ class PostCreateView(CreateView):
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, "Please correct the errors below.")
+        return self.render_to_response(self.get_context_data(form=form))
 
 class PostDetailView(DetailView):
     model = Post

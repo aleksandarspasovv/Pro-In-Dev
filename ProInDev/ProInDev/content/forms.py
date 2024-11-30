@@ -20,6 +20,12 @@ class PostForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['categories'].queryset = Category.objects.all()
 
+    def clean_categories(self):
+        categories = self.cleaned_data.get('categories')
+        if not categories:
+            raise forms.ValidationError("Please select at least one category.")
+        return categories
+
     def clean_body(self):
         body = self.cleaned_data.get('body')
         if body and len(body) > 2000:
