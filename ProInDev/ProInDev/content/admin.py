@@ -13,23 +13,49 @@ class CategoryInline(admin.TabularInline):
     extra = 1
 
 
+from django.contrib import admin
+from .models import Post, Comment, Category
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'approved', 'get_categories', 'created_at']
-    list_filter = ['approved', 'categories', 'created_at']
+    list_display = ['title', 'author', 'approved', 'has_pending_update', 'created_at']
+    list_filter = ['approved', 'created_at']
     search_fields = ['title', 'body', 'author__username']
-    actions = ['approve_posts']
-    inlines = [CategoryInline]  # Add the inline
+    actions = ['approve_posts', 'approve_updates', 'reject_updates']  # Ensure these actions are included
+    readonly_fields = ['pending_update_display']
 
-    def get_categories(self, obj):
-        return ", ".join([category.name for category in obj.categories.all()])
+    def has_pending_update(self, obj):
+        return bool(obj.pending_update)
 
-    get_categories.short_description = "Categories"
+    has_pending_update.boolean = True
+    has_pending_update.short_description = "Pending Update"
+
+    def pending_update_display(self, obj):
+        if obj.pending_update:
+            return f"Title: {obj.pending_update.get('title', 'N/A')}\nBody: {obj.pending_update.get('body', 'N/A')}"
+        return "No pending update"
+
+    pending_update_display.short_description = "Pending Update Details"
 
     def approve_posts(self, request, queryset):
         queryset.update(approved=True)
+        self.message_user(request, "Selected posts have been approved.")
 
     approve_posts.short_description = "Approve selected posts"
+
+    def approve_updates(self, request, queryset):
+        for post in queryset.filter(pending_update__isnull=False):
+            post.approve_update()
+        self.message_user(request, "Selected post updates have been approved.")
+
+    approve_updates.short_description = "Approve selected updates"
+
+    def reject_updates(self, request, queryset):
+        queryset.update(pending_update=None)
+        self.message_user(request, "Selected post updates have been rejected.")
+
+    reject_updates.short_description = "Reject selected updates"
 
 
 @admin.register(Comment)

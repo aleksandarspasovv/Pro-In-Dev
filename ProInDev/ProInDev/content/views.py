@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
@@ -154,15 +154,26 @@ def like_comment(request, comment_id):
 
 @login_required
 def post_edit_inline(request, pk):
-    post = get_object_or_404(Post, pk=pk, author=request.user)
+    post = get_object_or_404(Post, pk=pk)
+
     if request.method == "POST":
-        form = PostForm(request.POST, instance=post)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Post updated successfully!")
-        else:
-            messages.error(request, "Error updating the post.")
-    return redirect('post-detail', pk=pk)
+        if post.author != request.user:
+            return HttpResponseForbidden("You are not authorized to edit this post.")
+
+        title = request.POST.get("title", "").strip()
+        body = request.POST.get("body", "").strip()
+
+        if not title or not body:
+            messages.error(request, "Title and content are required.")
+            return redirect("post-detail", pk=pk)
+
+        post.pending_update = {"title": title, "body": body}
+        post.save()
+
+        messages.success(request, "Your changes have been submitted for approval.")
+        return redirect("post-detail", pk=pk)
+
+    return redirect("post-detail", pk=pk)
 
 
 @login_required

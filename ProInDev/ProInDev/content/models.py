@@ -50,8 +50,20 @@ class Post(models.Model):
         blank=True
     )
 
+    pending_update = models.JSONField(
+        blank=True,
+        null=True
+    )
+
     def total_likes(self):
         return self.likes.count()
+
+    def approve_update(self):
+        if self.pending_update:
+            self.title = self.pending_update.get('title', self.title)
+            self.body = self.pending_update.get('body', self.body)
+            self.pending_update = None
+            self.save()
 
     def __str__(self):
         return self.title
