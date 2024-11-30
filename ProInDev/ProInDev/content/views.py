@@ -58,6 +58,7 @@ class PostCreateView(CreateView):
         messages.error(self.request, "Please correct the errors below.")
         return self.render_to_response(self.get_context_data(form=form))
 
+
 class PostDetailView(DetailView):
     model = Post
     template_name = 'post-details.html'

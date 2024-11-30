@@ -16,9 +16,12 @@
                     <div class="mb-4">
                         <small class="text-muted">
                             Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
-                            <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline">
+                            <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline {% if post.author.is_superuser %}text-purple{% else %}text-blue{% endif %}">
                                 {{ post.author.username }}
                             </a>
+                            {% if post.author.is_superuser %}
+                                <span class="text-purple">(admin)</span>
+                            {% endif %}
                         </small>
                     </div>
                     {% if post.media %}
@@ -27,16 +30,16 @@
                         </div>
                     {% endif %}
                     <div class="d-flex justify-content-start gap-2 mb-4">
-                        <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                        <a href="{% url 'like-post' post.pk %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                             <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
                         </a>
                         {% if user.is_authenticated and user == post.author %}
-                            <button class="btn btn-outline-warning btn-xxs rounded-pill shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editPostModal">
+                            <button class="btn btn-edit btn-xxs rounded-pill shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editPostModal">
                                 <i class="fas fa-edit me-1"></i> Edit
                             </button>
                             <form method="POST" action="{% url 'post-delete-inline' post.pk %}" class="d-inline-block" onsubmit="return confirm('Are you sure you want to delete this post?')">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <button type="submit" class="btn btn-delete btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                     <i class="fas fa-trash-alt me-1"></i> Delete
                                 </button>
                             </form>
@@ -62,12 +65,21 @@
                             {% if comments %}
                                 {% for comment in comments %}
                                     <div class="mb-4">
-                                        <strong>{{ comment.author.username }}</strong>
-                                        <small class="text-muted">{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+                                        <small class="text-muted">
+                                            <a href="{% url 'profile' comment.author.id %}" class="text-decoration-underline {% if comment.author.is_superuser %}text-purple{% else %}text-blue{% endif %}">
+                                                <strong>{{ comment.author.username }}</strong>
+                                            </a>
+                                            {% if comment.author.is_superuser %}
+                                                <span class="text-purple">(admin)</span>
+                                            {% endif %}
+                                            {{ comment.created_at|date:"F j, Y, g:i a" }}
+                                        </small>
                                         <p class="mb-2">{{ comment.content }}</p>
-                                        <a href="{% url 'like-comment' comment.id %}" class="text-primary">
-                                            <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
-                                        </a>
+                                        <div class="d-flex gap-2">
+                                            <a href="{% url 'like-comment' comment.id %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                                <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
+                                            </a>
+                                        </div>
                                     </div>
                                     <hr>
                                 {% endfor %}
@@ -134,34 +146,52 @@
 
 <style>
     .btn-xxs {
-        font-size: 0.7rem;
-        font-weight: bold;
-        padding: 0.5rem 1rem;
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
     }
-    .btn-outline-light {
+    .btn-like {
         color: #f8f9fa;
         background-color: transparent;
         border: 1px solid #f8f9fa;
     }
-    .btn-outline-light:hover {
+    .btn-like:hover {
         color: #343a40;
         background-color: #f8f9fa;
     }
-    .btn-outline-warning {
+    .btn-edit {
         color: #ffc107;
-        border-color: #ffc107;
+        background-color: transparent;
+        border: 1px solid #ffc107;
     }
-    .btn-outline-warning:hover {
-        background-color: #ffc107;
+    .btn-edit:hover {
         color: #212529;
+        background-color: #ffc107;
     }
-    .btn-outline-danger {
+    .btn-delete {
         color: #dc3545;
-        border-color: #dc3545;
+        background-color: transparent;
+        border: 1px solid #dc3545;
     }
-    .btn-outline-danger:hover {
-        background-color: #dc3545;
+    .btn-delete:hover {
         color: #fff;
+        background-color: #dc3545;
+    }
+    [data-bs-theme="light"] .btn-like {
+        color: #212529;
+        border-color: #212529;
+    }
+    [data-bs-theme="light"] .btn-like:hover {
+        background-color: #212529;
+        color: #fff;
+    }
+    .card-body small {
+        font-size: 70%;
+    }
+    .text-blue {
+        color: #007bff !important;
+    }
+    .text-purple {
+        color: #6f42c1 !important;
     }
 </style>
 {% endblock %}
