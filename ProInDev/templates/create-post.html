@@ -28,12 +28,17 @@
                         </div>
                         <div class="mb-4">
                             <label for="id_categories" class="form-label fw-bold">Categories</label>
-                            <select class="form-select rounded-3 shadow-sm" id="id_categories" name="categories" multiple required>
-                                {% for category in form.fields.categories.queryset %}
-                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                            <div id="id_categories">
+                                {% for checkbox in form.categories %}
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
                                 {% endfor %}
-                            </select>
-                            <small class="text-muted">Hold down Ctrl (Windows) or Command (Mac) to select multiple categories.</small>
+                            </div>
+                            <small class="text-muted">Select one or more categories.</small>
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary rounded-pill shadow">Create Post</button>
@@ -84,6 +89,9 @@
     }
     .card-header {
         padding: 0.75rem 1rem;
+    }
+    .form-check {
+        margin-bottom: 0.5rem;
     }
 </style>
 {% endblock %}

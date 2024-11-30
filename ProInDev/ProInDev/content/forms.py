@@ -4,7 +4,7 @@ from ProInDev.content.models import Post, Category, Comment
 
 class PostForm(forms.ModelForm):
     categories = forms.ModelMultipleChoiceField(
-        queryset=Category.objects.all(),
+        queryset=Category.objects.none(),
         widget=forms.CheckboxSelectMultiple(attrs={
             'class': 'form-check-input',
         }),
@@ -16,11 +16,16 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'body', 'media', 'categories']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['categories'].queryset = Category.objects.all()
+
     def clean_body(self):
         body = self.cleaned_data.get('body')
         if body and len(body) > 2000:
             raise forms.ValidationError("Content cannot exceed 2000 characters.")
         return body
+
 
 
 class CommentForm(forms.ModelForm):

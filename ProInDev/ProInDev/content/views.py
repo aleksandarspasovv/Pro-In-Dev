@@ -41,6 +41,11 @@ class PostCreateView(CreateView):
     template_name = 'create-post.html'
     success_url = reverse_lazy('content-list')
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['categories'].queryset = Category.objects.all()
+        return form
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.approved = False
@@ -48,6 +53,7 @@ class PostCreateView(CreateView):
         form.instance.categories.set(form.cleaned_data['categories'])
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
+
 
 
 class PostDetailView(DetailView):
