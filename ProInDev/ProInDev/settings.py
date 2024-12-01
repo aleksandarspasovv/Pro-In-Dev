@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "ProInDev.public.apps.PublicConfig",
     'bootstrap5',
     "ProInDev.messages_app.apps.MessagesAppConfig",
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -29,9 +30,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'axes.middleware.AxesMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'ProInDev.urls'
 
