@@ -29,7 +29,11 @@ class PostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['important_posts'] = Post.objects.filter(approved=True, public=True).order_by('-created_at')[:5]
+        context['important_posts'] = Post.objects.filter(
+            approved=True,
+            public=True
+        ).order_by('-created_at')[:5]
+        
         context['categories'] = Category.objects.all()
         return context
 
@@ -56,6 +60,7 @@ class PostCreateView(CreateView):
 
     def form_invalid(self, form):
         messages.error(self.request, "Please correct the errors below.")
+
         return self.render_to_response(self.get_context_data(form=form))
 
 

@@ -24,11 +24,13 @@
                         {% csrf_token %}
                         <div class="mb-4">
                             <label for="id_title" class="form-label fw-bold">Title</label>
-                            <input type="text" class="form-control rounded-pill shadow-sm" id="id_title" name="title" placeholder="Enter post title" required>
+                            <input type="text" class="form-control rounded-pill shadow-sm" id="id_title" name="title" 
+                                   placeholder="Enter post title" value="{{ form.title.value|default:'' }}" required>
                         </div>
                         <div class="mb-4">
                             <label for="id_body" class="form-label fw-bold">Content</label>
-                            <textarea class="form-control rounded-3 shadow-sm" id="id_body" name="body" rows="4" placeholder="Write your post content here" maxlength="2000" required></textarea>
+                            <textarea class="form-control rounded-3 shadow-sm" id="id_body" name="body" rows="4" 
+                                      placeholder="Write your post content here" maxlength="2000" required>{{ form.body.value|default:'' }}</textarea>
                             <small class="text-muted">Maximum 2000 characters.</small>
                         </div>
                         <div class="mb-4">
