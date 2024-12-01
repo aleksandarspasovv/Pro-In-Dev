@@ -38,6 +38,18 @@ class UserProfile(models.Model):
         default=date.today,
     )
 
+    github = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    instagram = models.URLField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
     def can_change_profile_image(self):
         today = datetime.now().date()
         start_of_week = today - timedelta(days=today.weekday())

@@ -34,14 +34,23 @@ class UserProfileForm(forms.ModelForm):
         label="Overview",
     )
 
+    github = forms.URLField(
+        required=False,
+        label="GitHub Link",
+    )
+
+    instagram = forms.URLField(
+        required=False,
+        label="Instagram Link",
+    )
+
     class Meta:
         model = UserProfile
         fields = [
             'bio',
             'profile_image',
-            'first_name',
-            'last_name',
-            'overview',
+            'github',
+            'instagram',
         ]
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +59,17 @@ class UserProfileForm(forms.ModelForm):
         if user:
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
-            self.fields['overview'].initial = user.userprofile.bio
+
+    def save(self, commit=True):
+        user_profile = super().save(commit=False)
+        user_profile.bio = self.cleaned_data.get('overview', user_profile.bio)
+        user_profile.github = self.cleaned_data.get('github', user_profile.github)
+        user_profile.instagram = self.cleaned_data.get('instagram', user_profile.instagram)
+
+        if commit:
+            user_profile.save()
+
+        return user_profile
 
 
 class CustomAuthenticationForm(AuthenticationForm):

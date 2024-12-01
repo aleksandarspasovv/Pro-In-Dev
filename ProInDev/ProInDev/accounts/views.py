@@ -63,12 +63,14 @@ def profile_edit(request):
         form = UserProfileForm(request.POST, request.FILES, instance=profile, user=request.user)
         if form.is_valid():
             user = request.user
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
+            user.first_name = form.cleaned_data.get('first_name', user.first_name)
+            user.last_name = form.cleaned_data.get('last_name', user.last_name)
             user.save()
 
-            profile.bio = form.cleaned_data['overview']
-            form.save()
+            profile.bio = form.cleaned_data.get('overview', profile.bio)
+            profile.github = form.cleaned_data.get('github', profile.github)
+            profile.instagram = form.cleaned_data.get('instagram', profile.instagram)
+            profile.save()
 
             messages.success(request, "Your profile was successfully updated.")
             return redirect('profile_edit')

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+{% load custom_filters %}
 {% block title %}My Profile{% endblock %}
 
 {% block content %}
@@ -44,6 +44,20 @@
                     </div>
                     <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
                         <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on {{ user.date_joined|date:"F j, Y" }}</li>
+                        {% if user.userprofile.github %}
+                            <li class="list-inline-item ms-3">
+                                <a href="{{ user.userprofile.github }}" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-github me-1"></i>{{ user.userprofile.github|extract_username }}
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if user.userprofile.instagram %}
+                            <li class="list-inline-item ms-3">
+                                <a href="{{ user.userprofile.instagram }}" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-instagram me-1"></i>{{ user.userprofile.instagram|extract_username }}
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -91,6 +105,11 @@
         font-size: 0.9rem;
         text-align: center;
         font-weight: bold;
+    }
+
+    .bi-github, .bi-instagram {
+        font-size: 1.2rem;
+        vertical-align: middle;
     }
 </style>
 {% endblock %}
