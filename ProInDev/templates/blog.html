@@ -24,7 +24,7 @@
                             <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>
                             {% if post.media %}
                             <div class="mb-3 text-center">
-                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 300px; max-height: 400px;">
+                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 200px; max-height: 200px;">
                             </div>
                             {% endif %}
                             <div class="d-flex justify-content-start gap-2">
