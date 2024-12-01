@@ -43,7 +43,6 @@ class UserProfile(models.Model):
         start_of_week = today - timedelta(days=today.weekday())
 
         if self.last_change_date and self.last_change_date.date() < start_of_week:
-
             self.change_count = 0
 
         if self.change_count >= 3:

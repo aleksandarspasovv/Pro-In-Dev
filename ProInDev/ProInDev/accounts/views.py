@@ -2,11 +2,9 @@ from datetime import date
 from django.contrib.auth import login, authenticate, update_session_auth_hash, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
-from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from ProInDev.accounts.forms import UserRegistrationForm, UserProfileForm
 from ProInDev.accounts.models import UserProfile

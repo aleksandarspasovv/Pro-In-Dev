@@ -7,7 +7,7 @@ from ProInDev.content.views import PostListView, PostCreateView, PostDetailView,
 from ProInDev.accounts.views import RegisterView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin-panel/', admin.site.urls),
     path('', include('ProInDev.public.urls')),
     path('content/', include('ProInDev.content.urls')),
     path('posts/', PostListView.as_view(), name='post-list'),

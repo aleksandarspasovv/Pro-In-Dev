@@ -133,7 +133,7 @@ def post_comment(request, pk):
             messages.error(request, "There was an error submitting your comment. Please try again.")
     else:
         form = CommentForm()
-    return render(request, 'post_detail.html', {'post': post, 'form': form})
+    return render(request, 'post-details.html', {'post': post, 'form': form})
 
 
 @login_required
