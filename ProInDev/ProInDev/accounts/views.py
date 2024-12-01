@@ -1,6 +1,8 @@
+from datetime import date
 from django.contrib.auth import login, authenticate, update_session_auth_hash, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
@@ -115,3 +117,29 @@ def change_password(request):
 def profile_view_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     return render(request, 'profile.html', {'user': user})
+
+
+@login_required
+def profile_image_upload(request):
+    user_profile = request.user.userprofile
+
+    if request.method == "POST" and request.FILES.get("profile_image"):
+        if not user_profile.can_change_profile_image():
+            messages.error(request, "You can only change your profile picture up to 3 times per week.")
+            return redirect("profile")
+
+        profile_image = request.FILES["profile_image"]
+
+        if profile_image.size > 330 * 1024:
+            messages.error(request, "Profile picture size must not exceed 330 KB.")
+            return redirect("profile")
+
+        user_profile.profile_image = profile_image
+        user_profile.change_count += 1
+        user_profile.last_change_date = date.today()
+        user_profile.save()
+        messages.success(request, "Profile image updated successfully!")
+    else:
+        messages.error(request, "Failed to upload profile image.")
+
+    return redirect("profile")
