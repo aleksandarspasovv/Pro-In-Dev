@@ -32,6 +32,15 @@ class PostForm(forms.ModelForm):
             raise forms.ValidationError("Content cannot exceed 2000 characters.")
         return body
 
+    def clean_media(self):
+        media = self.cleaned_data.get('media')
+        if media:
+            max_size_kb = 330
+            if media.size > max_size_kb * 1024:
+                raise forms.ValidationError(f"The uploaded image exceeds {max_size_kb} KB.")
+
+        return media
+
 
 class CommentForm(forms.ModelForm):
     class Meta:

@@ -24,7 +24,7 @@
                             <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>
                             {% if post.media %}
                             <div class="mb-3 text-center">
-                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}">
+                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 300px; max-height: 400px;">
                             </div>
                             {% endif %}
                             <div class="d-flex justify-content-start gap-2">
@@ -88,9 +88,9 @@
                                 <li class="mb-3">
                                     <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none">
                                         <div class="d-flex align-items-center">
-                                            {% if post.media %}
-                                            <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow me-3" style="width: 60px; height: 60px; object-fit: cover;">
-                                            {% endif %}
+{#                                            {% if post.media %}#}
+{#                                              <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow me-3" style="width: 60px; height: 60px; object-fit: cover;">#}
+{#                                            {% endif %}#}
                                             <span class="text-secondary">{{ post.title }}</span>
                                         </div>
                                     </a>
