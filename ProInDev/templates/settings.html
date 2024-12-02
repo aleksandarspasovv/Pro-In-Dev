@@ -50,11 +50,11 @@
                 </div>
                 <div class="col-sm-6 col-lg-6">
                   <label class="form-label">GitHub Link</label>
-                  <input type="url" name="github" class="form-control" placeholder="https://github.com/username" value="{{ user.userprofile.github }}">
+                  <input type="url" name="github" class="form-control" placeholder="https://github.com/username" value="{{ user.userprofile.github|default:'' }}">
                 </div>
                 <div class="col-sm-6 col-lg-6">
                   <label class="form-label">Instagram Link</label>
-                  <input type="url" name="instagram" class="form-control" placeholder="https://instagram.com/username" value="{{ user.userprofile.instagram }}">
+                  <input type="url" name="instagram" class="form-control" placeholder="https://instagram.com/username" value="{{ user.userprofile.instagram|default:'' }}">
                 </div>
                 <div class="col-12 text-end mt-4">
                   <button type="submit" class="btn btn-primary mb-0">Save Changes</button>

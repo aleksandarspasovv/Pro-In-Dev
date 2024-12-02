@@ -60,6 +60,16 @@ class UserProfileForm(forms.ModelForm):
             self.fields['first_name'].initial = user.first_name
             self.fields['last_name'].initial = user.last_name
 
+    def clean(self):
+        cleaned_data = super().clean()
+        github = cleaned_data.get('github')
+        instagram = cleaned_data.get('instagram')
+
+        if not github and not instagram:
+            raise forms.ValidationError("Please provide at least one social media link (GitHub or Instagram).")
+
+        return cleaned_data
+
     def save(self, commit=True):
         user_profile = super().save(commit=False)
         user_profile.bio = self.cleaned_data.get('overview', user_profile.bio)
