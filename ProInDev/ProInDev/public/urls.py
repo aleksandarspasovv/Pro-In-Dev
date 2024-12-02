@@ -4,6 +4,6 @@ from ProInDev.public import views
 
 urlpatterns = [
     path('', views.index, name='index'),  # Landing page
-    path('about/', views.about, name='about'),
+    path('privacy-and-terms/', views.privacy_and_terms, name='privacy-and-terms'),
     path('help/', views.help_view, name='help'),
 ]
