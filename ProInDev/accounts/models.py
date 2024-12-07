@@ -51,19 +51,16 @@ class UserProfile(models.Model):
     )
 
     def can_change_profile_image(self):
-
-        # Get today's date
         today = datetime.now().date()
-        # Calculate the start of the current week (Monday)
         start_of_week = today - timedelta(days=today.weekday())
 
-        # Reset change_count if last change was before the current week
         if self.last_change_date and self.last_change_date.date() < start_of_week:
             self.change_count = 0
 
-        # Deny changes if the limit of 3 changes per week is reached
         if self.change_count >= 3:
             return False
 
         return True
 
+    def __str__(self):
+        return self.user.username

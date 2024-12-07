@@ -1,56 +1,54 @@
-{% extends "base.html" %}  <!-- Extends the base template -->
-{% block title %}Messaging{% endblock %}  <!-- Sets the title of the page -->
+{% extends "base.html" %}
+{% block title %}Messaging{% endblock %}
 
-{% block notifications %}  <!-- Block for notifications -->
+{% block notifications %}
 {% endblock %}
 
 {% block content %}
-<div class="container my-5">  <!-- Main container for the messaging interface -->
+<div class="container my-5">
     <div class="row g-4">
-        <div class="col-lg-8 col-md-10 mx-auto">  <!-- Main chat section -->
+        <div class="col-lg-8 col-md-10 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">
-                        {% if chat_user %}Chat with {{ chat_user.username }}{% else %}Inbox{% endif %}  <!-- Chat title -->
-                    </h4>
+                    <h4 class="card-title mb-0">{% if chat_user %}Chat with {{ chat_user.username }}{% else %}Inbox{% endif %}</h4>
                 </div>
                 <div class="card-body">
-                    {% if chat_user %}  <!-- Display chat messages if a chat user is selected -->
+                    {% if chat_user %}
                     <div class="border p-3 rounded mb-3" style="max-height: 400px; overflow-y: auto;">
-                        {% for message in messages %}  <!-- Loop through messages -->
-                        <div class="{% if message.sender == request.user %}text-end{% else %}text-start{% endif %}">  <!-- Align messages -->
-                            <p class="mb-1 {% if message.sender == request.user %}bg-primary text-white{% else %}bg-light{% endif %} rounded px-3 py-2 d-inline-block shadow-sm">  <!-- Message bubble styling -->
+                        {% for message in messages %}
+                        <div class="{% if message.sender == request.user %}text-end{% else %}text-start{% endif %}">
+                            <p class="mb-1 {% if message.sender == request.user %}bg-primary text-white{% else %}bg-light{% endif %} rounded px-3 py-2 d-inline-block shadow-sm">
                                 {{ message.content }}
                             </p>
-                            <small class="text-muted d-block">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>  <!-- Timestamp -->
+                            <small class="text-muted d-block">{{ message.timestamp|date:"F j, Y, g:i a" }}</small>
                         </div>
                         {% endfor %}
                     </div>
-                    <form method="POST" action="{% url 'messages_app:message-user' chat_user.id %}">  <!-- Form to send a message -->
-                        {% csrf_token %}  <!-- CSRF token for security -->
+                    <form method="POST" action="{% url 'messages_app:message-user' chat_user.id %}">
+                        {% csrf_token %}
                         <div class="mb-3">
-                            <textarea name="content" class="form-control rounded-3 shadow-sm" rows="3" placeholder="Type a message" required></textarea>  <!-- Message input -->
+                            <textarea name="content" class="form-control rounded-3 shadow-sm" rows="3" placeholder="Type a message" required></textarea>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary rounded-pill shadow">Send</button>  <!-- Send button -->
+                            <button type="submit" class="btn btn-primary rounded-pill shadow">Send</button>
                         </div>
                     </form>
-                    {% else %}  <!-- Display inbox if no chat user is selected -->
+                    {% else %}
                     <ul class="list-group">
-                        {% for message in latest_messages %}  <!-- Loop through latest messages -->
-                        <li class="list-group-item d-flex justify-content-between align-items-center">  <!-- List item for each message -->
+                        {% for message in latest_messages %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>
                                     {% if message.sender == request.user %}
-                                        {{ message.receiver.username }}  <!-- Display receiver's username -->
+                                        {{ message.receiver.username }}
                                     {% else %}
-                                        {{ message.sender.username }}  <!-- Display sender's username -->
+                                        {{ message.sender.username }}
                                     {% endif %}
                                 </strong>
-                                <p class="mb-1">{{ message.content|truncatewords:10 }}</p>  <!-- Truncated message content -->
+                                <p class="mb-1">{{ message.content|truncatewords:10 }}</p>
                             </div>
                             <div>
-                                <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}" class="btn btn-primary btn-sm">View Chat</a>  <!-- Link to chat -->
+                                <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}" class="btn btn-primary btn-sm">View Chat</a>
                             </div>
                         </li>
                         {% endfor %}
@@ -59,22 +57,22 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-2">  <!-- Sidebar for chat list -->
+        <div class="col-lg-4 col-md-2">
             <div class="row g-4">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Chats</h5>  <!-- Chat list header -->
+                            <h5 class="card-title mb-0">Chats</h5>
                         </div>
                         <div class="card-body">
-                            <ul class="list-group">  <!-- List of all chat partners -->
+                            <ul class="list-group">
                                 {% for message in latest_messages %}
                                 <li class="list-group-item">
-                                    <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}">  <!-- Link to individual chat -->
+                                    <a href="?chat={% if message.sender == request.user %}{{ message.receiver.id }}{% else %}{{ message.sender.id }}{% endif %}">
                                         {% if message.sender == request.user %}
-                                            {{ message.receiver.username }}  <!-- Display receiver's username -->
+                                            {{ message.receiver.username }}
                                         {% else %}
-                                            {{ message.sender.username }}  <!-- Display sender's username -->
+                                            {{ message.sender.username }}
                                         {% endif %}
                                     </a>
                                 </li>
@@ -89,32 +87,32 @@
 </div>
 
 <style>
-    .card {  /* Style for the card container */
+    .card {
         margin-top: 1.5rem;
     }
-    .card-header {  /* Style for card headers */
+    .card-header {
         padding: 0.75rem 1rem;
     }
-    .card-title {  /* Style for the title in the header */
+    .card-title {
         font-size: 1.25rem;
         font-weight: bold;
     }
-    .form-control {  /* Style for the message input */
+    .form-control {
         border-radius: 0.3rem;
     }
-    .btn {  /* Style for buttons */
+    .btn {
         font-size: 1rem;
         font-weight: bold;
     }
-    .list-group-item {  /* Style for list items */
+    .list-group-item {
         font-size: 0.9rem;
         padding: 0.75rem 1rem;
     }
-    .list-group-item a {  /* Style for links in list items */
+    .list-group-item a {
         text-decoration: none;
         color: inherit;
     }
-    .list-group-item a:hover {  /* Hover effect for links */
+    .list-group-item a:hover {
         text-decoration: underline;
     }
 </style>

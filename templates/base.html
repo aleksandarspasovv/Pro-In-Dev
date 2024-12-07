@@ -6,61 +6,122 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="ProInDev - A Social Media Platform">
-
-    <!-- Favicon -->
     <link rel="shortcut icon" href="{% static 'assets/images/oie_006YexpOcd9v.ico' %}">
-
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
-    <!-- CSS Libraries -->
     <link rel="stylesheet" href="{% static 'assets/vendor/font-awesome/css/all.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-
-    <!-- Theme Management Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme') || 'dark'; // Load saved theme or default to dark
+            const savedTheme = localStorage.getItem('theme') || 'dark';
             setTheme(savedTheme);
         });
-
         function setTheme(theme) {
-            document.documentElement.setAttribute('data-bs-theme', theme); // Set theme attribute
-            localStorage.setItem('theme', theme); // Save theme to localStorage
-            document.body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff'; // Update background
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+            document.body.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
+            document.documentElement.style.backgroundColor = theme === 'dark' ? '#121212' : '#ffffff';
             const themeIcon = document.getElementById('theme-icon');
             if (themeIcon) {
-                themeIcon.className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill'; // Update icon
+                themeIcon.className = theme === 'dark' ? 'bi bi-moon-stars-fill' : 'bi bi-sun-fill';
+            }
+            const logo = document.getElementById('theme-logo');
+            const themeTextElements = document.querySelectorAll('.theme-text');
+            if (theme === 'dark') {
+                logo.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
+                themeTextElements.forEach((element) => {
+                    element.classList.add('text-light');
+                    element.classList.remove('text-dark');
+                });
+            } else {
+                logo.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
+                themeTextElements.forEach((element) => {
+                    element.classList.add('text-dark');
+                    element.classList.remove('text-light');
+                });
             }
         }
-
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-bs-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             setTheme(newTheme);
-            location.reload(); // Reload to apply styles dynamically
+            location.reload();
         }
     </script>
+<style>
+    html, body {
+        background-color: #121212;
+        color: #ffffff;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    main {
+        flex: 1;
+        padding: 0;
+    }
+    header {
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        margin-top: 10px;
+        padding: 0;
+    }
+    .theme-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        margin-top: 2px;
+    }
+
+    .theme-toggle-btn i {
+        font-size: 1.5rem;
+        display: inline-block;
+        line-height: 1;
+    }
+
+    .navbar-nav {
+        align-items: center;
+    }
+    footer {
+        text-align: center;
+        padding: 1px 0;
+        font-size: 0.8rem;
+        background-color: #121212;
+        color: #ffffff;
+        width: 100%;
+    }
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-image {
+        max-width: 100px;
+        height: auto;
+    }
+</style>
     {% block extra_css %}{% endblock %}
 </head>
-<body>
-    <!-- Header/Navbar -->
+<body style="background-color: #121212;">
     <header class="navbar-light fixed-top header-static bg-mode">
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid d-flex justify-content-between align-items-center">
-                <!-- Logo -->
                 <a class="navbar-brand" href="{% url 'index' %}">
                     <img id="theme-logo" class="navbar-brand-item" src="{% static 'assets/images/logos_variations/custom_logo_white.svg' %}" alt="ProInDev Logo">
                 </a>
-
-                <!-- Mobile Navigation Toggle -->
                 <button class="navbar-toggler me-3 btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
-                <!-- Navigation Menu -->
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
@@ -69,24 +130,20 @@
                         {% endif %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'post-list' %}">Feed</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'create-post' %}">Create Post</a></li>
-
                         {% if request.user.is_authenticated %}
-                            <!-- Messages Icon -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'messages_app:messaging' %}">
-                                    <i class="bi bi-chat-dots-fill" style="font-size: 1.5rem;"></i>
-                                </a>
-                            </li>
-                            <!-- Account Dropdown -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
-                                <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                                    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                                </ul>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'messages_app:messaging' %}">
+                                <i class="bi bi-chat-dots-fill" style="font-size: 1.5rem;"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                            <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        </li>
                         {% endif %}
-                        <!-- Theme Toggle Button -->
                         <li class="nav-item">
                             <button onclick="toggleTheme()" class="theme-toggle-btn ms-2" id="theme-toggle-btn" aria-label="Toggle theme">
                                 <i id="theme-icon" class="bi bi-moon-stars-fill"></i>
@@ -97,8 +154,6 @@
             </div>
         </nav>
     </header>
-
-    <!-- Main Content -->
     <main>
         <div class="container">
             {% block notifications %}
@@ -116,19 +171,15 @@
             {% block content %}{% endblock %}
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <span>
-                ©2024 <a href="https://www.webestica.com/" target="_blank" style="color: #007bff; text-decoration: none;">Webestica</a> |
-                <a href="{% url 'privacy-and-terms' %}" style="color: #007bff; text-decoration: none;">Privacy & Terms</a>
-            </span>
-            <img src="{% static 'assets/images/logos_variations/small_logo_white.png' %}" alt="Footer Image" class="footer-image mb-2">
-        </div>
-    </footer>
-
-    <!-- JavaScript Libraries -->
+        <footer>
+            <div class="footer-content">
+                <span>
+                    ©2024 <a href="https://softuni.bg/" target="_blank" style="color: #007bff; text-decoration: none;">SoftUni</a> |
+                    <a href="{% url 'privacy-and-terms' %}" style="color: #007bff; text-decoration: none;">Privacy & Terms</a>
+                </span>
+                <img src="{% static 'assets/images/logos_variations/small_logo_white.png' %}" alt="Footer Image" class="footer-image mb-2">
+            </div>
+        </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
 </body>

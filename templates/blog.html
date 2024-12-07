@@ -1,41 +1,41 @@
-{% extends "base.html" %}  <!-- Extends the base template -->
-{% load static %}  <!-- Loads static files for the template -->
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Latest Posts{% endblock %}  <!-- Sets the title of the page -->
+{% block title %}Latest Posts{% endblock %}
 
 {% block content %}
-<div class="container my-5">  <!-- Main container for the content -->
+<div class="container my-5">
     <div class="row g-4">
-        <div class="col-lg-8 col-md-10 mx-auto" style="margin-left: 10%;">  <!-- Main column for posts -->
+        <div class="col-lg-8 col-md-10 mx-auto" style="margin-left: 10%;">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Latest Posts</h4>  <!-- Header title -->
+                    <h4 class="card-title mb-0">Latest Posts</h4>
                 </div>
                 <div class="card-body">
-                    {% for post in user_posts %}  <!-- Loop through the user_posts -->
-                    <div class="border-bottom border-2 pb-3 mb-4">  <!-- Divider for each post -->
+                    {% for post in user_posts %}
+                    <div class="border-bottom border-2 pb-3 mb-4">
                         <div class="position-relative">
-                            <small class="text-muted position-absolute top-0 end-0 mt-2 me-2">  <!-- Post date -->
+                            <small class="text-muted position-absolute top-0 end-0 mt-2 me-2">
                                 <i class="bi bi-calendar-date pe-1"></i>{{ post.created_at|date:"F j, Y" }}
                             </small>
                             <h5 class="mt-2">
-                                <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>  <!-- Post title with link -->
+                                <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
                             </h5>
-                            <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>  <!-- Excerpt from the post body -->
-                            {% if post.media %}  <!-- Check if media is attached -->
+                            <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>
+                            {% if post.media %}
                             <div class="mb-3 text-center">
-                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 200px; max-height: 200px;">  <!-- Post media -->
+                                <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 200px; max-height: 200px;">
                             </div>
                             {% endif %}
                             <div class="d-flex justify-content-start gap-2">
-                                <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">  <!-- Like button -->
+                                <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                     <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
                                 </a>
-                                <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">  <!-- Comment button -->
+                                <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                     <i class="fas fa-comment me-1"></i> Comment
                                 </a>
                             </div>
-                            <div class="d-flex flex-wrap gap-2 position-absolute bottom-0 end-0 mb-2 me-2">  <!-- Categories as badges -->
+                            <div class="d-flex flex-wrap gap-2 position-absolute bottom-0 end-0 mb-2 me-2">
                                 {% for category in post.categories.all %}
                                 <span class="badge bg-primary text-light fw-bold rounded-pill px-2 py-1" style="font-size: 0.65rem;">
                                     {{ category.name }}
@@ -44,30 +44,30 @@
                             </div>
                         </div>
                     </div>
-                    {% empty %}  <!-- Fallback if no posts are available -->
+                    {% empty %}
                     <p>No posts available at the moment.</p>
                     {% endfor %}
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4 col-md-2">  <!-- Sidebar for categories and important posts -->
+        <div class="col-lg-4 col-md-2">
             <div class="row g-4">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Categories</h5>  <!-- Categories header -->
+                            <h5 class="card-title mb-0">Categories</h5>
                         </div>
                         <div class="card-body">
-                            <ul class="list-inline mb-0 d-flex flex-wrap gap-2">  <!-- List of categories -->
+                            <ul class="list-inline mb-0 d-flex flex-wrap gap-2">
                                 <li class="list-inline-item m-0">
-                                    <a href="?category=all" class="btn btn-outline-primary btn-sm {% if request.GET.category == 'all' or not request.GET.category %}active{% endif %}">  <!-- All categories button -->
+                                    <a href="?category=all" class="btn btn-outline-primary btn-sm {% if request.GET.category == 'all' or not request.GET.category %}active{% endif %}">
                                         All Posts
                                     </a>
                                 </li>
-                                {% for category in categories %}  <!-- Loop through categories -->
+                                {% for category in categories %}
                                 <li class="list-inline-item m-0">
-                                    <a href="?category={{ category.name }}" class="btn btn-outline-primary btn-sm {% if request.GET.category == category.name %}active{% endif %}">  <!-- Individual category button -->
+                                    <a href="?category={{ category.name }}" class="btn btn-outline-primary btn-sm {% if request.GET.category == category.name %}active{% endif %}">
                                         {{ category.name }}
                                     </a>
                                 </li>
@@ -80,19 +80,22 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Important Posts</h5>  <!-- Important posts header -->
+                            <h5 class="card-title mb-0">Important Posts</h5>
                         </div>
                         <div class="card-body">
-                            <ul class="list-unstyled">  <!-- List of important posts -->
+                            <ul class="list-unstyled">
                                 {% for post in important_posts %}
                                 <li class="mb-3">
-                                    <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none">  <!-- Link to the important post -->
+                                    <a href="{% url 'post-detail' post.pk %}" class="text-decoration-none">
                                         <div class="d-flex align-items-center">
+{#                                            {% if post.media %}#}
+{#                                              <img src="{{ post.media.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow me-3" style="width: 60px; height: 60px; object-fit: cover;">#}
+{#                                            {% endif %}#}
                                             <span class="text-secondary">{{ post.title }}</span>
                                         </div>
                                     </a>
                                 </li>
-                                {% empty %}  <!-- Fallback if no important posts -->
+                                {% empty %}
                                 <p class="text-muted">No important posts available.</p>
                                 {% endfor %}
                             </ul>
@@ -105,27 +108,27 @@
 </div>
 
 <style>
-    .btn-xxs {  /* Custom button size */
+    .btn-xxs {
         font-size: 0.7rem;
         padding: 0.15rem 0.3rem;
     }
-    .card {  /* Style for cards */
+    .card {
         margin-top: 1.5rem;
     }
-    .badge {  /* Style for category badges */
+    .badge {
         font-size: 0.65rem;
         padding: 0.3rem 0.4rem;
     }
-    .border-bottom {  /* Style for post dividers */
+    .border-bottom {
         border-bottom: 2px solid #ddd;
     }
-    .card-body {  /* Style for card content area */
+    .card-body {
         position: relative;
     }
-    .card-header {  /* Style for card headers */
+    .card-header {
         padding: 0.75rem 1rem;
     }
-    @media (max-width: 767px) {  /* Mobile responsiveness */
+    @media (max-width: 767px) {
         .col-lg-8 {
             flex: 0 0 80%;
             max-width: 80%;
@@ -140,7 +143,7 @@
             max-width: 100%;
         }
     }
-    @media (min-width: 768px) {  /* Tablet and larger responsiveness */
+    @media (min-width: 768px) {
         .col-lg-8 {
             flex: 0 0 80%;
             max-width: 80%;

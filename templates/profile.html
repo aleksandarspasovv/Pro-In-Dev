@@ -1,57 +1,56 @@
-{% extends "base.html" %}  <!-- Extends the base template -->
-{% load static %}  <!-- Loads static files -->
-{% load custom_filters %}  <!-- Loads custom filters -->
+{% extends "base.html" %}
+{% load static %}
+{% load custom_filters %}
 
-{% block title %}{{ user.username }}'s Profile{% endblock %}  <!-- Sets the page title to the user's profile name -->
+{% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
-<div class="container my-5">  <!-- Main container for the profile page -->
+<div class="container my-5">
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="h-200px rounded-top"
-                     style="background-image: url({{ user.userprofile.cover_image.url|default:'' }}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                </div>  <!-- Displays the cover image -->
+                <div class="h-200px rounded-top" style="background-image: url({{ user.userprofile.cover_image.url|default:'' }}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+                </div>
                 <div class="card-body py-0">
                     <div class="d-sm-flex align-items-start text-center text-sm-start">
                         <div>
-                            <div class="avatar avatar-xxl mt-n5 mb-3">  <!-- Displays the user's profile picture -->
-                                {% if user.userprofile.profile_image %}  <!-- Check if the user has a profile picture -->
-                                    <img class="avatar-img rounded-circle border border-white border-3"
-                                         src="{{ user.userprofile.profile_image.url }}"
+                            <div class="avatar avatar-xxl mt-n5 mb-3">
+                                {% if user.userprofile.profile_image %}
+                                    <img class="avatar-img rounded-circle border border-white border-3" 
+                                         src="{{ user.userprofile.profile_image.url }}" 
                                          alt="User Avatar">
-                                {% else %}  <!-- Default profile picture -->
-                                    <img class="avatar-img rounded-circle border border-white border-3"
-                                         src="{% static 'assets/images/avatar/placeholder.jpg' %}"
+                                {% else %}
+                                    <img class="avatar-img rounded-circle border border-white border-3" 
+                                         src="{% static 'assets/images/avatar/placeholder.jpg' %}" 
                                          alt="User Avatar">
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="ms-sm-4 mt-sm-3">  <!-- User's username -->
+                        <div class="ms-sm-4 mt-sm-3">
                             <h1 class="mb-0 h5">{{ user.username }} <i class="bi bi-patch-check-fill text-success small"></i></h1>
                         </div>
-                        <div class="d-flex mt-3 justify-content-center ms-sm-auto">  <!-- Buttons for profile actions -->
-                            {% if user == request.user %}  <!-- If the profile belongs to the logged-in user -->
-                                <a href="{% url 'profile_edit' %}" class="btn btn-danger-soft me-2">
-                                    <i class="bi bi-pencil-fill pe-1"></i> Edit Profile
+                        <div class="d-flex mt-3 justify-content-center ms-sm-auto">
+                            {% if user == request.user %}
+                                <a href="{% url 'profile_edit' %}" class="btn btn-danger-soft me-2"> 
+                                    <i class="bi bi-pencil-fill pe-1"></i> Edit Profile 
                                 </a>
-                            {% else %}  <!-- If viewing someone else's profile -->
-                                <a href="{% url 'messages_app:message-user' user.id %}" class="btn btn-primary-soft me-2">
-                                    <i class="bi bi-envelope-fill pe-1"></i> Message
+                            {% else %}
+                                <a href="{% url 'messages_app:message-user' user.id %}" class="btn btn-primary-soft me-2"> 
+                                    <i class="bi bi-envelope-fill pe-1"></i> Message 
                                 </a>
                             {% endif %}
                         </div>
                     </div>
-                    <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">  <!-- User's additional info -->
-                        <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on {{ user.date_joined|date:"F j, Y" }}</li>  <!-- Join date -->
-                        {% if user.userprofile.github %}  <!-- If the user has a GitHub link -->
+                    <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                        <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> Joined on {{ user.date_joined|date:"F j, Y" }}</li>
+                        {% if user.userprofile.github %}
                             <li class="list-inline-item mt-3">
                                 <a href="{{ user.userprofile.github }}" target="_blank" class="text-decoration-none">
                                     <i class="bi bi-github me-1"></i>{{ user.userprofile.github|extract_username }}
                                 </a>
                             </li>
                         {% endif %}
-                        {% if user.userprofile.instagram %}  <!-- If the user has an Instagram link -->
+                        {% if user.userprofile.instagram %}
                             <li class="list-inline-item mt-3">
                                 <a href="{{ user.userprofile.instagram }}" target="_blank" class="text-decoration-none">
                                     <i class="bi bi-instagram me-1"></i>{{ user.userprofile.instagram|extract_username }}

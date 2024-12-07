@@ -9,13 +9,13 @@ from .forms import PostForm, CommentForm
 from .models import Post, Comment, Category
 
 
-class PostListView(ListView):  # Displays a list of posts
+class PostListView(ListView):
     model = Post
     template_name = 'blog.html'
     context_object_name = 'user_posts'
     paginate_by = 25
 
-    def get_queryset(self):  # Filters posts by category, approval, and public status
+    def get_queryset(self):
         queryset = Post.objects.filter(approved=True)
         category = self.request.GET.get('category', 'all')
 
@@ -27,29 +27,30 @@ class PostListView(ListView):  # Displays a list of posts
 
         return queryset.order_by('-created_at')
 
-    def get_context_data(self, **kwargs):  # Adds additional context data
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['important_posts'] = Post.objects.filter(
             approved=True,
             public=True
         ).order_by('-created_at')[:5]
+        
         context['categories'] = Category.objects.all()
         return context
 
 
 @method_decorator(login_required, name='dispatch')
-class PostCreateView(CreateView):  # Handles creating a new post
+class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
     template_name = 'create-post.html'
     success_url = reverse_lazy('content-list')
 
-    def get_form(self, form_class=None):  # Populates the form with available categories
+    def get_form(self, form_class=None):
         form = super().get_form(form_class)
         form.fields['categories'].queryset = Category.objects.all()
         return form
 
-    def form_valid(self, form):  # Saves the post with the author and approval status
+    def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.approved = False
         form.save()
@@ -57,17 +58,18 @@ class PostCreateView(CreateView):  # Handles creating a new post
         messages.success(self.request, "Post created successfully and is awaiting approval.")
         return super().form_valid(form)
 
-    def form_invalid(self, form):  # Handles invalid form submission
+    def form_invalid(self, form):
         messages.error(self.request, "Please correct the errors below.")
+
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class PostDetailView(DetailView):  # Displays details of a single post
+class PostDetailView(DetailView):
     model = Post
     template_name = 'post-details.html'
     context_object_name = 'post'
 
-    def get_context_data(self, **kwargs):  # Adds comments and forms to the context
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['comment_form'] = CommentForm()
@@ -80,29 +82,29 @@ class PostDetailView(DetailView):  # Displays details of a single post
         return context
 
 
-class PostUpdateView(UpdateView):  # Handles editing a post
+class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'edit-post.html'
     success_url = reverse_lazy('content-list')
 
-    def form_valid(self, form):  # Saves updates to the post
+    def form_valid(self, form):
         messages.success(self.request, "Post updated successfully!")
         return super().form_valid(form)
 
 
-class PostDeleteView(DeleteView):  # Handles deleting a post
+class PostDeleteView(DeleteView):
     model = Post
     template_name = 'confirm-delete.html'
     success_url = reverse_lazy('content-list')
 
-    def delete(self, request, *args, **kwargs):  # Deletes the post and shows a success message
+    def delete(self, request, *args, **kwargs):
         messages.success(request, "Post deleted successfully!")
         return super().delete(request, *args, **kwargs)
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def approve_post(request, pk):  # Approves a post
+def approve_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.approved = True
     post.save()
@@ -111,7 +113,7 @@ def approve_post(request, pk):  # Approves a post
 
 
 @user_passes_test(lambda u: u.is_superuser)
-def approve_comment(request, comment_id):  # Approves a comment
+def approve_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     comment.approved = True
     comment.save()
@@ -120,7 +122,7 @@ def approve_comment(request, comment_id):  # Approves a comment
 
 
 @login_required
-def post_comment(request, pk):  # Handles submitting a comment for a post
+def post_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -140,7 +142,7 @@ def post_comment(request, pk):  # Handles submitting a comment for a post
 
 
 @login_required
-def like_post(request, pk):  # Handles liking or unliking a post
+def like_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.user in post.likes.all():
         post.likes.remove(request.user)
@@ -150,7 +152,7 @@ def like_post(request, pk):  # Handles liking or unliking a post
 
 
 @login_required
-def like_comment(request, comment_id):  # Handles liking or unliking a comment
+def like_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.user in comment.likes.all():
         comment.likes.remove(request.user)
@@ -160,7 +162,7 @@ def like_comment(request, comment_id):  # Handles liking or unliking a comment
 
 
 @login_required
-def post_edit_inline(request, pk):  # Handles inline editing of a post
+def post_edit_inline(request, pk):
     post = get_object_or_404(Post, pk=pk)
 
     if request.method == "POST":
@@ -184,7 +186,7 @@ def post_edit_inline(request, pk):  # Handles inline editing of a post
 
 
 @login_required
-def post_delete_inline(request, pk):  # Handles inline deletion of a post
+def post_delete_inline(request, pk):
     post = get_object_or_404(Post, pk=pk, author=request.user)
     if request.method == "POST":
         post.delete()

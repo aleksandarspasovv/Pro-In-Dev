@@ -2,28 +2,28 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Message(models.Model):  # Model to represent a message
-    sender = models.ForeignKey(  # Sender of the message
+class Message(models.Model):
+    sender = models.ForeignKey(
         to=User,
-        on_delete=models.CASCADE,  # Deletes messages if the user is deleted
-        related_name='sent_messages'  # Related name for reverse query
+        on_delete=models.CASCADE,
+        related_name='sent_messages'
     )
 
-    receiver = models.ForeignKey(  # Receiver of the message
+    receiver = models.ForeignKey(
         to=User,
-        on_delete=models.CASCADE,  # Deletes messages if the user is deleted
-        related_name='received_messages'  # Related name for reverse query
+        on_delete=models.CASCADE,
+        related_name='received_messages'
     )
 
-    content = models.TextField()  # Content of the message
+    content = models.TextField()
 
-    timestamp = models.DateTimeField(  # Timestamp of when the message was sent
-        auto_now_add=True,  # Automatically set to now when created
+    timestamp = models.DateTimeField(
+        auto_now_add=True,
     )
 
-    is_read = models.BooleanField(  # Whether the message has been read
-        default=False,  # Default value is unread
+    is_read = models.BooleanField(
+        default=False,
     )
 
-    def __str__(self):  # String representation of the message
+    def __str__(self):
         return f'From {self.sender.username} to {self.receiver.username}'

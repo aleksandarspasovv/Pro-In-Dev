@@ -1,21 +1,21 @@
-{% extends "base.html" %}  <!-- Extends the base template -->
-{% load static %}  <!-- Loads static files -->
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}{{ post.title }}{% endblock %}  <!-- Sets the page title to the post title -->
+{% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-<div class="container my-5">  <!-- Main container for the post details -->
+<div class="container my-5">
     <div class="row g-4">
-        <div class="col-lg-8 col-md-10 mx-auto">  <!-- Main content area -->
+        <div class="col-lg-8 col-md-10 mx-auto">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">{{ post.title }}</h4>  <!-- Post title -->
+                    <h4 class="card-title mb-0">{{ post.title }}</h4>
                 </div>
                 <div class="card-body">
-                    <p class="mb-4">{{ post.body }}</p>  <!-- Post body -->
+                    <p class="mb-4">{{ post.body }}</p>
                     <div class="mb-4">
                         <small class="text-muted">
-                            Published on {{ post.created_at|date:"F j, Y, g:i a" }} by  <!-- Post publish details -->
+                            Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
                             <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline {% if post.author.is_superuser %}text-purple{% else %}text-blue{% endif %}">
                                 {{ post.author.username }}
                             </a>
@@ -24,16 +24,16 @@
                             {% endif %}
                         </small>
                     </div>
-                    {% if post.media %}  <!-- Check if the post has an image -->
+                    {% if post.media %}
                         <div class="mb-4">
-                            <img src="{{ post.media.url }}" class="img-fluid rounded shadow-sm" alt="Post Image">  <!-- Display image -->
+                            <img src="{{ post.media.url }}" class="img-fluid rounded shadow-sm" alt="Post Image">
                         </div>
                     {% endif %}
                     <div class="d-flex justify-content-start gap-2 mb-4">
-                        <a href="{% url 'like-post' post.pk %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">  <!-- Like button -->
+                        <a href="{% url 'like-post' post.pk %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                             <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
                         </a>
-                        {% if user.is_authenticated and user == post.author %}  <!-- Edit and delete options for post author -->
+                        {% if user.is_authenticated and user == post.author %}
                             <button class="btn btn-edit btn-xxs rounded-pill shadow-sm d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#editPostModal">
                                 <i class="fas fa-edit me-1"></i> Edit
                             </button>
@@ -45,7 +45,7 @@
                             </form>
                         {% endif %}
                     </div>
-                    {% if user.is_authenticated and user.is_superuser and not post.approved %}  <!-- Approve option for admin -->
+                    {% if user.is_authenticated and user.is_superuser and not post.approved %}
                         <form action="{% url 'post-approve' post.pk %}" method="post" class="mt-4">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success rounded-pill shadow-sm">Approve Post</button>
@@ -54,15 +54,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-md-2">  <!-- Sidebar area -->
+        <div class="col-lg-4 col-md-2">
             <div class="row g-4">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Comments</h5>  <!-- Comments section header -->
+                            <h5 class="card-title mb-0">Comments</h5>
                         </div>
                         <div class="card-body">
-                            {% if comments %}  <!-- Display comments if available -->
+                            {% if comments %}
                                 {% for comment in comments %}
                                     <div class="mb-4">
                                         <small class="text-muted">
@@ -74,22 +74,22 @@
                                             {% endif %}
                                             {{ comment.created_at|date:"F j, Y, g:i a" }}
                                         </small>
-                                        <p class="mb-2">{{ comment.content }}</p>  <!-- Comment content -->
+                                        <p class="mb-2">{{ comment.content }}</p>
                                         <div class="d-flex gap-2">
-                                            <a href="{% url 'like-comment' comment.id %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">  <!-- Like button for comments -->
+                                            <a href="{% url 'like-comment' comment.id %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                                 <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
                                             </a>
                                         </div>
                                     </div>
-                                    <hr>  <!-- Divider between comments -->
+                                    <hr>
                                 {% endfor %}
-                            {% else %}  <!-- Fallback message if no comments -->
+                            {% else %}
                                 <p class="text-muted">No comments yet. Be the first to comment!</p>
                             {% endif %}
                         </div>
                     </div>
                 </div>
-                {% if user.is_authenticated %}  <!-- Comment form for logged-in users -->
+                {% if user.is_authenticated %}
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
@@ -106,7 +106,7 @@
                         </div>
                     </div>
                 </div>
-                {% else %}  <!-- Message for non-logged-in users -->
+                {% else %}
                 <div class="col-12">
                     <p class="text-muted">Please <a href="{% url 'login' %}">log in</a> to leave a comment.</p>
                 </div>
@@ -115,15 +115,15 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">  <!-- Modal for editing the post -->
+    
+<div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editPostModalLabel">Edit Post</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{% url 'post-edit-inline' post.pk %}">  <!-- Form for post edit -->
+            <form method="POST" action="{% url 'post-edit-inline' post.pk %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
@@ -145,14 +145,53 @@
 </div>
 
 <style>
-    .btn-xxs { font-size: 0.65rem; padding: 0.3rem 0.6rem; }  /* Extra small button style */
-    .btn-like { color: #f8f9fa; background-color: transparent; border: 2px solid #f8f9fa; }  /* Like button style */
-    .btn-like:hover { color: #343a40; background-color: #f8f9fa; }
-    .btn-edit { color: #ffc107; background-color: transparent; border: 1px solid #ffc107; }  /* Edit button style */
-    .btn-edit:hover { color: #212529; background-color: #ffc107; }
-    .btn-delete { color: #dc3545; background-color: transparent; border: 1px solid #dc3545; }  /* Delete button style */
-    .btn-delete:hover { color: #fff; background-color: #dc3545; }
-    .text-blue { color: #007bff !important; }  /* Blue text for links */
-    .text-purple { color: #6f42c1 !important; }  /* Purple text for admin links */
+    .btn-xxs {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+    }
+    .btn-like {
+        color: #f8f9fa;
+        background-color: transparent;
+        border: 2px solid #f8f9fa;
+    }
+    .btn-like:hover {
+        color: #343a40;
+        background-color: #f8f9fa;
+    }
+    .btn-edit {
+        color: #ffc107;
+        background-color: transparent;
+        border: 1px solid #ffc107;
+    }
+    .btn-edit:hover {
+        color: #212529;
+        background-color: #ffc107;
+    }
+    .btn-delete {
+        color: #dc3545;
+        background-color: transparent;
+        border: 1px solid #dc3545;
+    }
+    .btn-delete:hover {
+        color: #fff;
+        background-color: #dc3545;
+    }
+    [data-bs-theme="light"] .btn-like {
+        color: #212529;
+        border-color: #212529;
+    }
+    [data-bs-theme="light"] .btn-like:hover {
+        background-color: #212529;
+        color: #fff;
+    }
+    .card-body small {
+        font-size: 85%;
+    }
+    .text-blue {
+        color: #007bff !important;
+    }
+    .text-purple {
+        color: #6f42c1 !important;
+    }
 </style>
 {% endblock %}

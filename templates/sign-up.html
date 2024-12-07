@@ -1,22 +1,22 @@
-{% extends "base.html" %}  <!-- Extends the base template -->
-{% load static %}  <!-- Loads static files -->
+{% extends "base.html" %}
+{% load static %}
 
-{% block title %}Sign Up{% endblock %}  <!-- Sets the title for the sign-up page -->
+{% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="container" style="margin-top: 0; padding-top: 20px;">  <!-- Main container for sign-up -->
+<div class="container" style="margin-top: 0; padding-top: 20px;">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-header bg-light text-center rounded-top">  <!-- Header section -->
+                <div class="card-header bg-light text-center rounded-top">
                     <h2 class="mb-0 text-primary">Create an Account</h2>
                     <p class="text-muted">Join our community</p>
                 </div>
                 <div class="card-body p-4 p-md-5">
-                    <form method="post" action="{% url 'register' %}">  <!-- Sign-up form -->
+                    <form method="post" action="{% url 'register' %}">
                         {% csrf_token %}
 
-                        {% if form.non_field_errors %}  <!-- Display non-field errors -->
+                        {% if form.non_field_errors %}
                             <div class="alert alert-danger">
                                 {% for error in form.non_field_errors %}
                                     <p>{{ error }}</p>
@@ -26,8 +26,8 @@
 
                         <div class="mb-4">
                             <label for="username" class="form-label">Username</label>
-                            <input type="text" id="username" name="username" class="form-control rounded-pill shadow-sm" placeholder="Choose a username" required>  <!-- Username input -->
-                            {% if form.username.errors %}  <!-- Display username errors -->
+                            <input type="text" id="username" name="username" class="form-control rounded-pill shadow-sm" placeholder="Choose a username" required>
+                            {% if form.username.errors %}
                                 <div class="text-danger">
                                     {% for error in form.username.errors %}
                                         <small>{{ error }}</small>
@@ -38,8 +38,8 @@
 
                         <div class="mb-4">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" id="email" name="email" class="form-control rounded-pill shadow-sm" placeholder="Enter your email" required>  <!-- Email input -->
-                            {% if form.email.errors %}  <!-- Display email errors -->
+                            <input type="email" id="email" name="email" class="form-control rounded-pill shadow-sm" placeholder="Enter your email" required>
+                            {% if form.email.errors %}
                                 <div class="text-danger">
                                     {% for error in form.email.errors %}
                                         <small>{{ error }}</small>
@@ -51,12 +51,12 @@
                         <div class="mb-4">
                             <label for="password1" class="form-label">Password</label>
                             <div class="input-group">
-                                <input type="password" id="password1" name="password1" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Create a password" required>  <!-- Password input -->
+                                <input type="password" id="password1" name="password1" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Create a password" required>
                                 <button type="button" onclick="togglePasswordVisibility('password1')" class="btn btn-outline-primary rounded-pill shadow-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
                                     Show Password
                                 </button>
                             </div>
-                            {% if form.password1.errors %}  <!-- Display password errors -->
+                            {% if form.password1.errors %}
                                 <div class="text-danger">
                                     {% for error in form.password1.errors %}
                                         <small>{{ error }}</small>
@@ -68,5 +68,44 @@
                         <div class="mb-4">
                             <label for="password2" class="form-label">Confirm Password</label>
                             <div class="input-group">
-                                <input type="password" id="password2" name="password2" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Re-enter password" required>  <!-- Confirm password input -->
-                                <button type="button" onclick="togglePasswordVisibility('password2')" class="btn btn-outline-primary rounded-pill shadow-sm" style="border-top-left-radius: 0; border-bottom
+                                <input type="password" id="password2" name="password2" class="form-control rounded-pill shadow-sm" style="border-top-right-radius: 0; border-bottom-right-radius: 0;" placeholder="Re-enter password" required>
+                                <button type="button" onclick="togglePasswordVisibility('password2')" class="btn btn-outline-primary rounded-pill shadow-sm" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                    Show Password
+                                </button>
+                            </div>
+                            {% if form.password2.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.password2.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow">Sign Up</button>
+                        </div>
+                    </form>
+
+                    <p class="text-center mt-4 mb-0">Already have an account? <a href="{% url 'login' %}" class="text-primary">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePasswordVisibility(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const showPasswordButton = event.target;
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            showPasswordButton.textContent = "Hide Password";
+        } else {
+            passwordField.type = "password";
+            showPasswordButton.textContent = "Show Password";
+        }
+    }
+</script>
+{% endblock %}
