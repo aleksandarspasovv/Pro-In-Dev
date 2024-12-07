@@ -24,7 +24,6 @@
         </div>
       </div>
     </div>
-
     <div class="col-lg-9 vstack gap-4">
       <div class="tab-content" id="settingsTabContent">
         <div class="tab-pane fade show active" id="account-settings">
@@ -50,11 +49,11 @@
                 </div>
                 <div class="col-sm-6 col-lg-6">
                   <label class="form-label">GitHub Link</label>
-                  <input type="url" name="github" class="form-control" placeholder="https://github.com/username" value="{{ user.userprofile.github|default:'' }}">
+                  <input type="url" name="github" class="form-control placeholder-gray" placeholder="https://github.com/username" value="{{ user.userprofile.github|default:'' }}">
                 </div>
                 <div class="col-sm-6 col-lg-6">
                   <label class="form-label">Instagram Link</label>
-                  <input type="url" name="instagram" class="form-control" placeholder="https://instagram.com/username" value="{{ user.userprofile.instagram|default:'' }}">
+                  <input type="url" name="instagram" class="form-control placeholder-gray" placeholder="https://instagram.com/username" value="{{ user.userprofile.instagram|default:'' }}">
                 </div>
                 <div class="col-12 text-end mt-4">
                   <button type="submit" class="btn btn-primary mb-0">Save Changes</button>
@@ -62,7 +61,6 @@
               </form>
             </div>
           </div>
-
           <div class="card">
             <div class="card-header border-0 pb-0">
               <h5 class="card-title">Change your password</h5>
@@ -78,13 +76,16 @@
                 <div class="col-12">
                   <label class="form-label">New password</label>
                   <div class="input-group">
-                    <input name="new_password1" class="form-control" type="password" placeholder="Enter new password">
-                    <button class="btn btn-outline-secondary" type="button">Show</button>
+                    <input id="new_password1" name="new_password1" class="form-control rounded-pill shadow-sm" type="password" placeholder="Enter new password">
+                    <button type="button" class="btn btn-outline-primary rounded-pill shadow-sm" onclick="togglePasswordVisibility('new_password1')">Show Password</button>
                   </div>
                 </div>
                 <div class="col-12">
                   <label class="form-label">Confirm password</label>
-                  <input name="new_password2" type="password" class="form-control" placeholder="Confirm new password">
+                  <div class="input-group">
+                    <input id="new_password2" name="new_password2" type="password" class="form-control rounded-pill shadow-sm" placeholder="Confirm new password">
+                    <button type="button" class="btn btn-outline-primary rounded-pill shadow-sm" onclick="togglePasswordVisibility('new_password2')">Show Password</button>
+                  </div>
                 </div>
                 <div class="col-12 text-end mt-4">
                   <button type="submit" class="btn btn-primary mb-0">Update Password</button>
@@ -93,7 +94,6 @@
             </div>
           </div>
         </div>
-
         <div class="tab-pane fade" id="nav-remove-account">
           <div class="card">
             <div class="card-header border-0 pb-0">
@@ -118,4 +118,14 @@
     </div>
   </div>
 </div>
+<script>
+  function togglePasswordVisibility(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    if (passwordField.type === "password") {
+      passwordField.type = "text";
+    } else {
+      passwordField.type = "password";
+    }
+  }
+</script>
 {% endblock %}
