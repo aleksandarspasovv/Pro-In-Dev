@@ -1,0 +1,61 @@
+{% extends "base.html" %}  <!-- Extends the base template -->
+
+{% block title %}Sign In{% endblock %}  <!-- Sets the title for the sign-in page -->
+
+{% block notifications %}
+{% if messages %}  <!-- Display notification messages if available -->
+<div class="mt-3">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 0; padding-top: 20px;">  <!-- Main container for sign-in -->
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-light text-center rounded-top">  <!-- Header section -->
+                    <h2 class="mb-0 text-primary">Welcome Back!</h2>
+                    <p class="text-muted">Sign in to your account</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" action="{% url 'login' %}">  <!-- Sign-in form -->
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" id="username" name="username" class="form-control rounded-pill shadow-sm" placeholder="Enter username" required>  <!-- Username input -->
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control rounded-pill shadow-sm" placeholder="Enter password" required>  <!-- Password input -->
+                                <button type="button" onclick="togglePasswordVisibility('password')" class="btn btn-outline-primary rounded-pill shadow-sm">Show Password</button>
+                            </div>
+                        </div>
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow">Sign In</button>  <!-- Sign-in button -->
+                        </div>
+                    </form>
+                    <p class="text-center mt-4 mb-0">Don’t have an account? <a href="{% url 'register' %}" class="text-primary">Create one here</a></p>  <!-- Link to sign-up page -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function togglePasswordVisibility(fieldId) {  // Toggles the password visibility
+        const passwordField = document.getElementById(fieldId);
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+        } else {
+            passwordField.type = "password";
+        }
+    }
+</script>
+{% endblock %}

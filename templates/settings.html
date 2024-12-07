@@ -1,0 +1,121 @@
+{% extends "base.html" %}  <!-- Extends the base template -->
+{% load static %}  <!-- Loads static files -->
+
+{% block content %}
+<div class="container my-5">  <!-- Main container for settings page -->
+  <div class="row">
+    <div class="col-lg-3">  <!-- Sidebar for navigation tabs -->
+      <div class="card w-100">
+        <div class="card-body">
+          <ul class="nav nav-tabs nav-pills nav-pills-soft flex-column fw-bold gap-2 border-0">
+            <li class="nav-item">
+              <a class="nav-link active" href="#account-settings" data-bs-toggle="tab">  <!-- Tab for account settings -->
+                <img class="me-2 h-20px fa-fw" src="{% static 'assets/images/icon/person-outline-filled.svg' %}" alt="">
+                <span>Account</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#nav-remove-account" data-bs-toggle="tab">  <!-- Tab for account removal -->
+                <img class="me-2 h-20px fa-fw" src="{% static 'assets/images/icon/trash-outline-filled.svg' %}" alt="">
+                <span>Remove Account</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9 vstack gap-4">  <!-- Main content area for forms -->
+      <div class="tab-content" id="settingsTabContent">
+        <div class="tab-pane fade show active" id="account-settings">  <!-- Account settings tab -->
+          <div class="card mb-4">
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title">Account Settings</h5>  <!-- Header for account settings -->
+              <p class="mb-0">Manage your account details.</p>
+            </div>
+            <div class="card-body">
+              <form method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}" class="row g-3">  <!-- Account details form -->
+                {% csrf_token %}
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">First Name</label>
+                  <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">  <!-- First name input -->
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">  <!-- Last name input -->
+                </div>
+                <div class="col-sm-6 col-lg-4">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" value="{{ user.email }}" readonly>  <!-- Email (read-only) -->
+                </div>
+                <div class="col-sm-6 col-lg-6">
+                  <label class="form-label">GitHub Link</label>
+                  <input type="url" name="github" class="form-control" placeholder="https://github.com/username" value="{{ user.userprofile.github|default:'' }}">  <!-- GitHub input -->
+                </div>
+                <div class="col-sm-6 col-lg-6">
+                  <label class="form-label">Instagram Link</label>
+                  <input type="url" name="instagram" class="form-control" placeholder="https://instagram.com/username" value="{{ user.userprofile.instagram|default:'' }}">  <!-- Instagram input -->
+                </div>
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-primary mb-0">Save Changes</button>  <!-- Save changes button -->
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">  <!-- Change password card -->
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title">Change your password</h5>
+              <p class="mb-0">Update your password for increased security.</p>
+            </div>
+            <div class="card-body">
+              <form method="post" action="{% url 'change_password' %}" class="row g-3">  <!-- Password change form -->
+                {% csrf_token %}
+                <div class="col-12">
+                  <label class="form-label">Current password</label>
+                  <input type="password" name="old_password" class="form-control" placeholder="Enter current password">  <!-- Current password input -->
+                </div>
+                <div class="col-12">
+                  <label class="form-label">New password</label>
+                  <div class="input-group">
+                    <input name="new_password1" class="form-control" type="password" placeholder="Enter new password">  <!-- New password input -->
+                    <button class="btn btn-outline-secondary" type="button">Show</button>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Confirm password</label>
+                  <input name="new_password2" type="password" class="form-control" placeholder="Confirm new password">  <!-- Confirm password input -->
+                </div>
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-primary mb-0">Update Password</button>  <!-- Update password button -->
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="nav-remove-account">  <!-- Remove account tab -->
+          <div class="card">
+            <div class="card-header border-0 pb-0">
+              <h5 class="card-title text-danger">Remove Account</h5>  <!-- Header for account removal -->
+              <p class="mb-0">Permanently delete your account and all associated data.</p>
+            </div>
+            <div class="card-body">
+              <form method="post" action="{% url 'remove_account' %}" class="row g-3">  <!-- Account removal form -->
+                {% csrf_token %}
+                <div class="col-12">
+                  <label class="form-label">Please type your password to confirm</label>
+                  <input type="password" name="password" class="form-control" placeholder="Enter your password">  <!-- Password confirmation input -->
+                </div>
+                <div class="col-12 text-end mt-4">
+                  <button type="submit" class="btn btn-danger mb-0">Delete Account</button>  <!-- Delete account button -->
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

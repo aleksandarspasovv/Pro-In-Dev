@@ -1,0 +1,31 @@
+{% extends "base.html" %}  <!-- Extends the base template -->
+
+{% block content %}
+<div class="container">  <!-- Main container for the form -->
+    <h2>{% if form.instance.pk %}Edit Post{% else %}Create New Post{% endif %}</h2>  <!-- Conditional heading based on the form instance -->
+
+    <form method="post" enctype="multipart/form-data">  <!-- Form for creating or editing a post -->
+        {% csrf_token %}  <!-- CSRF token for form security -->
+
+        <div class="form-group">  <!-- Form group for the title input -->
+            <label for="title">Title</label>
+            {{ form.title }}  <!-- Renders the title field -->
+        </div>
+
+        <div class="form-group">  <!-- Form group for the body input -->
+            <label for="body">Body</label>
+            {{ form.body }}  <!-- Renders the body field -->
+        </div>
+
+        <div class="form-group">  <!-- Form group for the media input -->
+            <label for="media">Media (optional)</label>
+            {{ form.media }}  <!-- Renders the media field -->
+        </div>
+
+        <button type="submit" class="btn btn-primary">  <!-- Submit button -->
+            {% if form.instance.pk %}Update{% else %}Create{% endif %}  <!-- Button label changes based on form instance -->
+        </button>
+        
+    </form>
+</div>
+{% endblock %}

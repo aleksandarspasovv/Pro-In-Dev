@@ -1,0 +1,108 @@
+{% extends "base.html" %}  <!-- Extends the base template -->
+{% load static %}  <!-- Loads static files -->
+
+{% block title %}Welcome to Social - Network, Community, and Event{% endblock %}  <!-- Sets the page title -->
+
+{% block content %}
+<div class="container text-center" style="max-width: 600px; padding-top: 50px;">  <!-- Main container for the landing page -->
+    <div class="mb-4">
+        <img id="theme-logo" src="{% static 'assets/images/color_custom_logo.svg' %}" alt="Custom Logo" class="img-fluid" style="max-width: 200px; height: auto;">  <!-- Logo -->
+        <h1 class="display-6 mt-3">Progress In Development</h1>  <!-- Main heading -->
+        {% if user.is_authenticated %}  <!-- Check if the user is logged in -->
+            <p id="login-status" class="theme-text">&lt;You are now logged in /&gt;</p>  <!-- Logged-in status -->
+        {% else %}
+            <p class="lead theme-text">Created for SoftUni Students</p>  <!-- Default message for non-logged-in users -->
+        {% endif %}
+    </div>
+
+    <section class="mb-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">  <!-- First column -->
+                {% if user.is_authenticated %}  <!-- Check if the user is logged in -->
+                    <h3 class="theme-text">Explore Content</h3>  <!-- Content for logged-in users -->
+                    <p class="theme-text">Check out the latest posts and discussions on the platform.</p>
+                    <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
+                {% else %}
+                    <h3 class="theme-text">Explore Public Posts</h3>  <!-- Content for non-logged-in users -->
+                    <p class="theme-text">Discover insights and updates in our collection of public posts, accessible to everyone.</p>
+                    <a href="{% url 'content-list' %}" class="btn btn-primary">Browse Content</a>
+                {% endif %}
+            </div>
+            <div class="col-md-4 mb-4">  <!-- Second column -->
+                {% if user.is_authenticated %}  <!-- Check if the user is logged in -->
+                    <h3 class="theme-text">Create a Post</h3>  <!-- Option to create a post -->
+                    <p class="theme-text">Share your thoughts with the community.</p>
+                    <a href="{% url 'create-post' %}" class="btn btn-secondary" style="border: 2px solid white;">Create Post</a>
+                {% else %}
+                    <div class="col-mb-4 or-section">  <!-- Placeholder for non-logged-in users -->
+                        <img id="theme-image" class="navbar-brand-item" src="{% static 'assets/images/or_images/white.svg' %}" alt="&" style="width: 80px; height: auto;">
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-md-4 mb-4">  <!-- Third column -->
+                {% if user.is_authenticated %}  <!-- Check if the user is logged in -->
+                    <h3 class="theme-text">Edit your Account</h3>  <!-- Profile management option -->
+                    <p class="theme-text">Change your details or password in your account settings</p>
+                    <a href="{% url 'profile' %}" class="btn btn-success">View Profile</a>
+                {% else %}
+                    <h3 class="theme-text">Connect with Members</h3>  <!-- Call to action for non-logged-in users -->
+                    <p class="theme-text">Engage with members across the platform by signing up/login and create posts.</p>
+                    <a href="{% url 'register' %}" class="btn btn-success">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentTheme = localStorage.getItem('theme') || 'dark';  // Get current theme or default to dark
+        const logo = document.getElementById('theme-logo');  // Logo element
+        const themeTextElements = document.querySelectorAll('.theme-text');  // Theme text elements
+        const darkModeItems = document.querySelectorAll('.dark-mode-item');  // Elements specific to dark mode
+        const themeImage = document.getElementById('theme-image');  // Theme-specific image
+        const body = document.body;
+
+        if (currentTheme === 'dark') {  // Apply dark mode styles
+            logo.src = "{% static 'assets/images/logos_variations/custom_logo_white.svg' %}";
+            body.classList.add('dark-mode');
+            body.classList.remove('light-mode');
+            if (themeImage) {
+                themeImage.src = "{% static 'assets/images/or_images/or_both.png' %}";
+            }
+        } else {  // Apply light mode styles
+            logo.src = "{% static 'assets/images/logos_variations/custom_logo.svg' %}";
+            body.classList.add('light-mode');
+            body.classList.remove('dark-mode');
+            if (themeImage) {
+                themeImage.src = "{% static 'assets/images/or_images/or_both.png' %}";
+            }
+        }
+
+        themeTextElements.forEach((element) => {  // Update text colors based on theme
+            if (currentTheme === 'dark') {
+                element.classList.add('text-light');
+                element.classList.remove('text-dark');
+            } else {
+                element.classList.add('text-dark');
+                element.classList.remove('text-light');
+            }
+        });
+
+        darkModeItems.forEach((item) => {  // Show or hide dark mode-specific items
+            if (currentTheme === 'dark') {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+
+    function toggleTheme() {  // Toggles between dark and light themes
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('theme', newTheme);  // Save the new theme in localStorage
+        window.location.reload();  // Reload the page to apply changes
+    }
+</script>
+{% endblock %}

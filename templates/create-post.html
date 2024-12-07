@@ -1,0 +1,108 @@
+{% extends "base.html" %}  <!-- Extends the base template -->
+
+{% block title %}Create New Post{% endblock %}  <!-- Sets the title of the page -->
+
+{% block content %}
+<div class="container my-5">  <!-- Main container for the content -->
+    <div class="row g-4">
+        <div class="col-lg-8 col-md-10 mx-auto" style="margin-left: 10%;">  <!-- Main column for the form -->
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Create a New Post</h4>  <!-- Header title -->
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}  <!-- Display form errors if any -->
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field, errors in form.errors.items %}  <!-- Loop through errors -->
+                                    <li><strong>{{ field|capfirst }}</strong>: {{ errors|join:", " }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                    <form action="{% url 'create-post' %}" method="POST" enctype="multipart/form-data">  <!-- Form submission -->
+                        {% csrf_token %}  <!-- CSRF token for security -->
+                        <div class="mb-4">
+                            <label for="id_title" class="form-label fw-bold">Title</label>  <!-- Title field -->
+                            <input type="text" class="form-control rounded-pill shadow-sm" id="id_title" name="title"
+                                   placeholder="Enter post title" value="{{ form.title.value|default:'' }}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_body" class="form-label fw-bold">Content</label>  <!-- Body field -->
+                            <textarea class="form-control rounded-3 shadow-sm" id="id_body" name="body" rows="4"
+                                      placeholder="Write your post content here" maxlength="2000" required>{{ form.body.value|default:'' }}</textarea>
+                            <small class="text-muted">Maximum 2000 characters.</small>  <!-- Character limit info -->
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_media" class="form-label fw-bold">Image</label>  <!-- Media upload field -->
+                            <input type="file" class="form-control rounded-3 shadow-sm" id="id_media" name="media">
+                        </div>
+                        <div class="mb-4">
+                            <label for="id_categories" class="form-label fw-bold">Categories (required)</label>  <!-- Categories selection -->
+                            <div id="id_categories">
+                                {% for checkbox in form.categories %}  <!-- Loop through category checkboxes -->
+                                    <div class="form-check">
+                                        {{ checkbox.tag }}  <!-- Render the checkbox -->
+                                        <label class="form-check-label" for="{{ checkbox.id_for_label }}">  <!-- Checkbox label -->
+                                            {{ checkbox.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">Select one or more categories.</small>  <!-- Category selection info -->
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary rounded-pill shadow">Create Post</button>  <!-- Submit button -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-2">  <!-- Sidebar column -->
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Tips for Creating Posts</h5>  <!-- Tips header -->
+                        </div>
+                        <div class="card-body">
+                            <ul>  <!-- List of tips for creating posts -->
+                                <li>Ensure your title is concise and informative.</li>
+                                <li>Provide detailed and engaging content.</li>
+                                <li>Attach a relevant image to attract more readers [Not Compulsory].</li>
+                                <li>Select appropriate categories to enhance visibility [Multiple Choice].</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-xxs {  /* Custom button size */
+        font-size: 0.7rem;
+        padding: 0.15rem 0.3rem;
+    }
+    .card {  /* Style for cards */
+        margin-top: 1.5rem;
+    }
+    .badge {  /* Style for category badges */
+        font-size: 0.65rem;
+        padding: 0.3rem 0.4rem;
+    }
+    .border-bottom {  /* Style for section dividers */
+        border-bottom: 2px solid #ddd;
+    }
+    .card-body {  /* Style for card body */
+        position: relative;
+    }
+    .card-header {  /* Style for card headers */
+        padding: 0.75rem 1rem;
+    }
+    .form-check {  /* Style for form checkboxes */
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
