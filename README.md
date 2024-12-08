@@ -31,3 +31,11 @@ This project uses a `.env` file to store sensitive information.
 I know it must be hidden and not uploaded...
 
 https://drive.google.com/file/d/1lczGCV5sNwpp-04MkwFCOuVtLLQhSd-v/view?usp=drive_link
+
+
+## Deployment
+
+This project is deployed and accessible via the following domains:
+
+1. **Azure Subdomain**: [proindev-ehhzb2begwcqfkgx.italynorth-01.azurewebsites.net](https://proindev-ehhzb2begwcqfkgx.italynorth-01.azurewebsites.net)  
+2. **Custom Domain**: [proindev.com](https://proindev.com)
