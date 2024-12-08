@@ -1,7 +1,6 @@
-
 import os
 from pathlib import Path
-
+import cloudinary
 import cloudinary.api
 from decouple import config
 from django.urls import reverse_lazy
@@ -91,7 +90,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-import cloudinary
+
 
 cloudinary.config(
     cloud_name=os.getenv('CLOUD_NAME', config('CLOUD_NAME')),
