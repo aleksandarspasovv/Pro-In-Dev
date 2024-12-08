@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "ProInDev.public.apps.PublicConfig",
     'bootstrap5',
     "ProInDev.messages_app.apps.MessagesAppConfig",
-    'axes',
+    # 'axes',
     'cloudinary',
     'cloudinary_storage',
 ]
@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'axes.middleware.AxesMiddleware',
+    # 'axes.middleware.AxesMiddleware',
 ]
 
 
@@ -115,7 +115,7 @@ LOGIN_REDIRECT_URL = reverse_lazy("index")
 LOGOUT_REDIRECT_URL = reverse_lazy("index")
 
 AUTHENTICATION_BACKENDS = [
-    'axes.backends.AxesStandaloneBackend',
+    # 'axes.backends.AxesStandaloneBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
