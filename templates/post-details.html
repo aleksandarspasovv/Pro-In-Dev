@@ -12,7 +12,7 @@
                     <h4 class="card-title mb-0">{{ post.title }}</h4>
                 </div>
                 <div class="card-body">
-                    <p class="mb-4">{{ post.body }}</p>
+                    <p class="mb-4" style="white-space: pre-wrap;">{{ post.body }}</p>
                     <div class="mb-4">
                         <small class="text-muted">
                             Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
@@ -74,7 +74,7 @@
                                             {% endif %}
                                             {{ comment.created_at|date:"F j, Y, g:i a" }}
                                         </small>
-                                        <p class="mb-2">{{ comment.content }}</p>
+                                        <p class="mb-2" style="white-space: pre-wrap;">{{ comment.content }}</p>
                                         <div class="d-flex gap-2">
                                             <a href="{% url 'like-comment' comment.id %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                                 <i class="fas fa-thumbs-up me-1"></i> Like ({{ comment.total_likes }})
@@ -115,7 +115,7 @@
         </div>
     </div>
 </div>
-    
+
 <div class="modal fade" id="editPostModal" tabindex="-1" aria-labelledby="editPostModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
