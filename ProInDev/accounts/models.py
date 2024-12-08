@@ -1,4 +1,6 @@
 from datetime import date, timedelta, datetime
+
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -12,10 +14,10 @@ class UserProfile(models.Model):
         blank=True,
         null=True
     )
-    profile_image = models.ImageField(
-        upload_to='profile_images/',
+    profile_image = CloudinaryField(
+        'image',
         blank=True,
-        null=True
+        null=True,
     )
 
     ROLE_CHOICES = [

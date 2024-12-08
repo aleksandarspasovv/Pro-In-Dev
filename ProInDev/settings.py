@@ -1,7 +1,10 @@
+
 import os
 from pathlib import Path
-from django.urls import reverse_lazy
+
+import cloudinary.api
 from decouple import config
+from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +29,8 @@ INSTALLED_APPS = [
     'bootstrap5',
     "ProInDev.messages_app.apps.MessagesAppConfig",
     'axes',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +90,17 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
+import cloudinary
+
+cloudinary.config(
+    cloud_name=os.getenv('CLOUD_NAME', config('CLOUD_NAME')),
+    api_key=os.getenv('API_KEY', config('API_KEY')),
+    api_secret=os.getenv('API_SECRET', config('API_SECRET'))
+)
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 STATIC_URL = 'static/'
 

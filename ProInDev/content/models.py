@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
@@ -15,7 +16,7 @@ class Category(models.Model):
     name = models.CharField(
         max_length=100,
         choices=CATEGORY_CHOICES,
-        unique=True
+        unique=True,
     )
 
     def __str__(self):
@@ -24,35 +25,43 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
+
     body = models.TextField()
-    media = models.ImageField(
-        upload_to='media/',
-        blank=True,
-        null=True
+
+    media = CloudinaryField(
+        'image'
+        , blank=True,
+        null=True,
     )
+
     created_at = models.DateTimeField(default=timezone.now)
+
     updated_at = models.DateTimeField(auto_now=True)
+
     author = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
-        related_name="posts"
+        related_name="posts",
     )
     approved = models.BooleanField(default=False)
+
     public = models.BooleanField(default=False)
+
     likes = models.ManyToManyField(
         User,
         related_name="liked_posts",
-        blank=True
+        blank=True,
     )
+
     categories = models.ManyToManyField(
         Category,
         related_name="posts",
-        blank=True
+        blank=True,
     )
 
     pending_update = models.JSONField(
         blank=True,
-        null=True
+        null=True,
     )
 
     def total_likes(self):
@@ -73,20 +82,26 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post,
         related_name="comments",
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+    )
 
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="comments"
+        related_name="comments",
     )
+
     content = models.TextField()
+
     created_at = models.DateTimeField(auto_now_add=True)
+
     approved = models.BooleanField(default=False)
+
     likes = models.ManyToManyField(
         User,
         related_name="liked_comments",
-        blank=True)
+        blank=True,
+    )
 
     def total_likes(self):
         return self.likes.count()
