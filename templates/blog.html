@@ -21,7 +21,12 @@
                             <h5 class="mt-2">
                                 <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
                             </h5>
-                            <p class="mb-3 mt-3" style="white-space: pre-wrap;">{{ post.body|truncatewords:150 }}</p>
+                            <p class="mb-3 mt-3" style="white-space: pre-wrap;">
+                                {{ post.body|truncatewords:150 }}...
+                                <a href="{% url 'post-detail' post.pk %}" class="text-primary fw-bold text-decoration-underline">
+                                    Read More
+                                </a>
+                            </p>
                             {% if post.media %}
                             <div class="mb-3 text-center">
                                 <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 200px; max-height: 200px;">
