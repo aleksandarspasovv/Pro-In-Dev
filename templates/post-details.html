@@ -15,7 +15,7 @@
                     <p class="mb-4" style="white-space: pre-wrap;">{{ post.body }}</p>
                     <div class="mb-4">
                         <small class="text-muted">
-                            Published on {{ post.created_at|date:"F j, Y, g:i a" }} by 
+                            Published on {{ post.created_at|date:"F j, Y, g:i a" }} by
                             <a href="{% url 'profile' post.author.id %}" class="text-decoration-underline {% if post.author.is_superuser %}text-purple{% else %}text-blue{% endif %}">
                                 {{ post.author.username }}
                             </a>

@@ -22,10 +22,12 @@
                                 <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
                             </h5>
                             <p class="mb-3 mt-3" style="white-space: pre-wrap;">
-                                {{ post.body|truncatewords:150 }}...
+                                {{ post.body|linebreaks|truncatewords_html:77|safe }}
+                                {% if post.body|length > 150 %}
                                 <a href="{% url 'post-detail' post.pk %}" class="text-primary fw-bold text-decoration-underline">
                                     Read More
                                 </a>
+                                {% endif %}
                             </p>
                             {% if post.media %}
                             <div class="mb-3 text-center">
@@ -33,7 +35,7 @@
                             </div>
                             {% endif %}
                             <div class="d-flex justify-content-start gap-2">
-                                <a href="{% url 'like-post' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
+                                <a href="{% url 'like-post' post.pk %}" class="btn btn-like btn-xxs rounded-pill shadow-sm d-flex align-items-center">
                                     <i class="fas fa-thumbs-up me-1"></i> Like ({{ post.total_likes }})
                                 </a>
                                 <a href="{% url 'post-detail' post.pk %}" class="btn btn-outline-light btn-xxs rounded-pill shadow-sm d-flex align-items-center">
@@ -111,50 +113,17 @@
 
 <style>
     .btn-xxs {
-        font-size: 0.7rem;
-        padding: 0.15rem 0.3rem;
-    }
-    .card {
-        margin-top: 1.5rem;
-    }
-    .badge {
         font-size: 0.65rem;
-        padding: 0.3rem 0.4rem;
+        padding: 0.3rem 0.6rem;
     }
-    .border-bottom {
-        border-bottom: 2px solid #ddd;
+    .btn-like {
+        color: #f8f9fa;
+        background-color: transparent;
+        border: 2px solid #f8f9fa;
     }
-    .card-body {
-        position: relative;
-    }
-    .card-header {
-        padding: 0.75rem 1rem;
-    }
-    @media (max-width: 767px) {
-        .col-lg-8 {
-            flex: 0 0 80%;
-            max-width: 80%;
-            margin-left: 10%;
-        }
-        .col-lg-4 {
-            flex: 0 0 20%;
-            max-width: 20%;
-        }
-        .col-lg-4 .col-12 {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-    }
-    @media (min-width: 768px) {
-        .col-lg-8 {
-            flex: 0 0 80%;
-            max-width: 80%;
-            margin-left: 10%;
-        }
-        .col-lg-4 {
-            flex: 0 0 20%;
-            max-width: 20%;
-        }
+    .btn-like:hover {
+        color: #343a40;
+        background-color: #f8f9fa;
     }
 </style>
 {% endblock %}
