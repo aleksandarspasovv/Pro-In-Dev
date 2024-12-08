@@ -21,7 +21,7 @@
                             <h5 class="mt-2">
                                 <a href="{% url 'post-detail' post.pk %}" class="btn-link text-reset fw-bold">{{ post.title }}</a>
                             </h5>
-                            <p class="mb-3 mt-3">{{ post.body|truncatewords:30 }}</p>
+                            <p class="mb-3 mt-3">{{ post.body|truncatewords:150 }}</p>
                             {% if post.media %}
                             <div class="mb-3 text-center">
                                 <img class="img-fluid rounded" src="{{ post.media.url }}" alt="{{ post.title }}" style="max-width: 200px; max-height: 200px;">
