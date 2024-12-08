@@ -59,27 +59,27 @@ def profile_view(request):
 
 @login_required
 def profile_edit(request):
-    User = get_user_model()
     user = request.user
-    profile, created = UserProfile.objects.get_or_create(user=user)
-    if request.method == 'POST':
-        first_name = request.POST.get('first_name', '').strip()
-        last_name = request.POST.get('last_name', '').strip()
-        github = request.POST.get('github', '').strip()
-        instagram = request.POST.get('instagram', '').strip()
-        if first_name:
-            user.first_name = first_name
-        if last_name:
-            user.last_name = last_name
+    user_profile = request.user.userprofile
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name", "").strip()
+        last_name = request.POST.get("last_name", "").strip()
+        github = request.POST.get("github", "").strip()
+        instagram = request.POST.get("instagram", "").strip()
+
+        user.first_name = first_name if first_name else ""
+        user.last_name = last_name if last_name else ""
         user.save()
-        if github:
-            profile.github = github
-        if instagram:
-            profile.instagram = instagram
-        profile.save()
+
+        user_profile.github = github if github else None
+        user_profile.instagram = instagram if instagram else None
+        user_profile.save()
+
         messages.success(request, "Your profile was successfully updated.")
-        return redirect('profile_edit')
-    return render(request, 'settings.html', {'user': user})
+        return redirect("profile_edit")
+
+    return render(request, "settings.html", {"user_profile": user_profile})
 
 
 @login_required

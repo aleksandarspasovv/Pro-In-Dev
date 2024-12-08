@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import cloudinary
 import cloudinary.api
 from decouple import config
 from django.urls import reverse_lazy
