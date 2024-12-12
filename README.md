@@ -7,7 +7,7 @@ This project is deployed and accessible via the following domains:
 
 
 
-
+------------------------------------
 # ProInDev - A Social Media Platform
 
 ProInDev is a Django-based social media platform designed specially for SoftUni Students to interact through posts, comments, and messaging.
