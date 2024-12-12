@@ -1,6 +1,6 @@
 ## Deployment
 
-This project is deployed and accessible via the following domains:
+This project is deployed and accessible via the following domain:
 
 - **Custom Domain**: [proindev.com](https://proindev.com)
 
